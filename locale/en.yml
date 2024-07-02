@@ -1,7 +1,22 @@
 xypp-store:
-  # For more details on the format
-  # Checkout https://docs.flarum.org/extend/i18n/#appendix-a-standard-key-format
-  admin:
-    title: Xypp Store
   forum:
-    store: 商店
+    store: Store
+    create: Create Item
+    purchase: Purchase
+    provider:
+      error:
+        title: Unknown provider
+    unavailable:
+      common:
+        unknown: "Unable to Purchase"
+    create-modal:
+      title: Create Item
+      name: Name
+      desc: Description
+      price: Price
+      provider: Provider
+      provider_data: Provider Data
+      button: Create
+      success: Item created
+    purchase-confirm:
+      title: "Are you sure to purchase this item?"

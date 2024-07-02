@@ -19,6 +19,26 @@ flarum_admin_app__WEBPACK_IMPORTED_MODULE_0___default().initializers.add('xypp/s
 
 /***/ }),
 
+/***/ "./src/common/extend.ts":
+/*!******************************!*\
+  !*** ./src/common/extend.ts ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var flarum_common_extenders__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! flarum/common/extenders */ "flarum/common/extenders");
+/* harmony import */ var flarum_common_extenders__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(flarum_common_extenders__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _models_StoreItem__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./models/StoreItem */ "./src/common/models/StoreItem.ts");
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ([new (flarum_common_extenders__WEBPACK_IMPORTED_MODULE_0___default().Store)().add('store-items', _models_StoreItem__WEBPACK_IMPORTED_MODULE_1__["default"])]);
+
+/***/ }),
+
 /***/ "./src/common/index.ts":
 /*!*****************************!*\
   !*** ./src/common/index.ts ***!
@@ -27,12 +47,93 @@ flarum_admin_app__WEBPACK_IMPORTED_MODULE_0___default().initializers.add('xypp/s
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var flarum_common_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! flarum/common/app */ "flarum/common/app");
-/* harmony import */ var flarum_common_app__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(flarum_common_app__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   StoreItemUtils: () => (/* reexport safe */ _utils_StoreItemUtils__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _utils_StoreItemUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/StoreItemUtils */ "./src/common/utils/StoreItemUtils.tsx");
 
-flarum_common_app__WEBPACK_IMPORTED_MODULE_0___default().initializers.add('xypp/store', function () {
-  console.log('[xypp/store] Hello, forum and admin!');
-});
+
+
+/***/ }),
+
+/***/ "./src/common/models/StoreItem.ts":
+/*!****************************************!*\
+  !*** ./src/common/models/StoreItem.ts ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ StoreItem)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/inheritsLoose */ "./node_modules/@babel/runtime/helpers/esm/inheritsLoose.js");
+/* harmony import */ var flarum_common_Model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! flarum/common/Model */ "flarum/common/Model");
+/* harmony import */ var flarum_common_Model__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(flarum_common_Model__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+// For more details about frontend models
+// checkout https://docs.flarum.org/extend/models.html#frontend-models
+var StoreItem = /*#__PURE__*/function (_Model) {
+  (0,_babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_0__["default"])(StoreItem, _Model);
+  function StoreItem() {
+    var _this;
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _Model.call.apply(_Model, [this].concat(args)) || this;
+    _this.itemData = flarum_common_Model__WEBPACK_IMPORTED_MODULE_1___default().attribute('data');
+    _this.type = flarum_common_Model__WEBPACK_IMPORTED_MODULE_1___default().attribute("type");
+    _this.createdAt = flarum_common_Model__WEBPACK_IMPORTED_MODULE_1___default().attribute('createdAt', (flarum_common_Model__WEBPACK_IMPORTED_MODULE_1___default().transformDate));
+    _this.name = flarum_common_Model__WEBPACK_IMPORTED_MODULE_1___default().attribute('name');
+    _this.desc = flarum_common_Model__WEBPACK_IMPORTED_MODULE_1___default().attribute('desc');
+    _this.price = flarum_common_Model__WEBPACK_IMPORTED_MODULE_1___default().attribute('price');
+    _this.provider = flarum_common_Model__WEBPACK_IMPORTED_MODULE_1___default().attribute('provider');
+    _this.provider_data = flarum_common_Model__WEBPACK_IMPORTED_MODULE_1___default().attribute('provider_data');
+    _this.unavailable = flarum_common_Model__WEBPACK_IMPORTED_MODULE_1___default().attribute('unavailable');
+    return _this;
+  }
+  return StoreItem;
+}((flarum_common_Model__WEBPACK_IMPORTED_MODULE_1___default()));
+
+
+/***/ }),
+
+/***/ "./src/common/utils/StoreItemUtils.tsx":
+/*!*********************************************!*\
+  !*** ./src/common/utils/StoreItemUtils.tsx ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ StoreItemUtils)
+/* harmony export */ });
+var _class;
+var StoreItemUtils = /*#__PURE__*/function () {
+  StoreItemUtils.init = function init(app) {
+    StoreItemUtils.instance = new StoreItemUtils(app);
+  };
+  StoreItemUtils.getInstance = function getInstance() {
+    return StoreItemUtils.instance;
+  };
+  function StoreItemUtils(app) {
+    this.app = void 0;
+    this.app = app;
+  }
+  var _proto = StoreItemUtils.prototype;
+  _proto.createItemShowCase = function createItemShowCase($item) {
+    return m("div", {
+      "class": "showcase-error"
+    }, this.app.translator.trans('xypp-store.forum.provider.error.title'));
+  };
+  return StoreItemUtils;
+}();
+_class = StoreItemUtils;
+StoreItemUtils.instance = void 0;
+
 
 /***/ }),
 
@@ -47,14 +148,67 @@ module.exports = flarum.core.compat['admin/app'];
 
 /***/ }),
 
-/***/ "flarum/common/app":
-/*!***************************************************!*\
-  !*** external "flarum.core.compat['common/app']" ***!
-  \***************************************************/
+/***/ "flarum/common/Model":
+/*!*****************************************************!*\
+  !*** external "flarum.core.compat['common/Model']" ***!
+  \*****************************************************/
 /***/ ((module) => {
 
 "use strict";
-module.exports = flarum.core.compat['common/app'];
+module.exports = flarum.core.compat['common/Model'];
+
+/***/ }),
+
+/***/ "flarum/common/extenders":
+/*!*********************************************************!*\
+  !*** external "flarum.core.compat['common/extenders']" ***!
+  \*********************************************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = flarum.core.compat['common/extenders'];
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/inheritsLoose.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/inheritsLoose.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _inheritsLoose)
+/* harmony export */ });
+/* harmony import */ var _setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./setPrototypeOf.js */ "./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js");
+
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+  (0,_setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(subClass, superClass);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _setPrototypeOf)
+/* harmony export */ });
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+  return _setPrototypeOf(o, p);
+}
 
 /***/ })
 
@@ -134,8 +288,14 @@ var __webpack_exports__ = {};
   !*** ./admin.ts ***!
   \******************/
 __webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   StoreItemUtils: () => (/* reexport safe */ _src_common__WEBPACK_IMPORTED_MODULE_0__.StoreItemUtils),
+/* harmony export */   extend: () => (/* reexport safe */ _src_common_extend__WEBPACK_IMPORTED_MODULE_2__["default"])
+/* harmony export */ });
 /* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/common */ "./src/common/index.ts");
 /* harmony import */ var _src_admin__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./src/admin */ "./src/admin/index.ts");
+/* harmony import */ var _src_common_extend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./src/common/extend */ "./src/common/extend.ts");
+
 
 
 })();
