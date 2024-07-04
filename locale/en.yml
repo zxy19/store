@@ -3,6 +3,8 @@ xypp-store:
     store: Store
     create: Create Item
     purchase: Purchase
+    edit_button: Edit
+    show_case: Showcase
     provider:
       error:
         title: Unknown provider
@@ -16,7 +18,13 @@ xypp-store:
       price: Price
       provider: Provider
       provider_data: Provider Data
+      edit-title: Edit Item#{0}
+      edit-button: Edit
       button: Create
       success: Item created
-    purchase-confirm:
-      title: "Are you sure to purchase this item?"
+      delete-button: Delete
+      providers:
+        unknown: "Select Provider"
+        unknown_data: "Need to select provider first"
+        no_select_data: "Select Provider Data"
+    purchase-confirm: "Confirm Purchase?"

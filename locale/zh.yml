@@ -1,0 +1,30 @@
+xypp-store:
+  forum:
+    store: 商店
+    create: 创建商品
+    purchase: 购买
+    edit_button: 编辑
+    show_case: 橱窗
+    provider:
+      error:
+        title: 未知商品提供者
+    unavailable:
+      common:
+        unknown: "无法购买此商品"
+    create-modal:
+      title: 创建商品
+      name: 商品名
+      desc: 描述
+      price: 价格
+      provider: 商品提供者
+      provider_data: 商品提供者数据
+      edit-title: 编辑物品#{0}
+      edit-button: 编辑
+      button: 创建
+      success: 成功
+      delete-button: 删除商品
+      providers:
+        unknown: "选择商品提供者"
+        unknown_data: "需要选择提供者"
+        no_select_data: "选择提供者数据"
+    purchase-confirm: "确定购买吗?"

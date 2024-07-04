@@ -39,7 +39,8 @@ class StoreItemSerializer extends AbstractSerializer
             "desc" => $model->desc,
             "price" => $model->price,
             "data" => $model->dataAttrs,
-            "unavailable" => $model->unavailable
+            "unavailable" => $model->unavailable,
+            "provider_data" => $model->provider_data
         ];
     }
 }

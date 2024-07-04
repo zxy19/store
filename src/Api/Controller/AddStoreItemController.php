@@ -22,7 +22,11 @@ class AddStoreItemController extends AbstractCreateController
         $actor->assertCan("addStoreItem");
 
         $attributes = Arr::get($request->getParsedBody(), 'attributes', []);
-        $model = new StoreItem();
+        if (Arr::get($attributes, 'id')) {
+            $model = StoreItem::findOrFail(Arr::get($attributes, 'id'));
+        } else {
+            $model = new StoreItem();
+        }
         $model->name = Arr::get($attributes, 'name');
         $model->desc = Arr::get($attributes, 'desc');
         $model->price = Arr::get($attributes, 'price');

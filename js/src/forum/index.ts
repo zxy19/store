@@ -6,6 +6,7 @@ import StorePage from './components/StorePage';
 import StoreItemUtils from '../common/utils/StoreItemUtils';
 import Model from 'flarum/common/Model';
 import User from 'flarum/common/models/User';
+import CreateItemModal from "./components/CreateItemModal"
 app.initializers.add('xypp/store', () => {
   //@ts-ignore
   User.prototype.canCreateStoreItem = Model.attribute('canCreateStoreItem');
@@ -25,10 +26,11 @@ app.initializers.add('xypp/store', () => {
           icon: 'fas fa-store',
         },
         [
-          app.translator.trans('xypp-store.forum.store'),
+          app.translator.trans('xypp-store.forum.store')
         ]
       ),
       10
     );
   });
 });
+export { CreateItemModal };
