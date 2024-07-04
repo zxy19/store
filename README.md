@@ -1,8 +1,14 @@
 # Store
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/xypp/store.svg)](https://packagist.org/packages/xypp/store) [![Total Downloads](https://img.shields.io/packagist/dt/xypp/store.svg)](https://packagist.org/packages/xypp/store)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-A [Flarum](http://flarum.org) extension. store
+A [Flarum](http://flarum.org) extension. 
+
+This extension provides a store that can be used to purchase item with money of `antoinefr/flarum-ext-money`.
+
+At the beginning, the extension is developed for another extension [user-decoration](https://github.com/zxy19/user-decoration). But it will probably be used for more extensions in the future.
+
+About how to create a provider, see [xypp-store-template](https://github.com/zxy19/store-template)
 
 ## Installation
 
@@ -22,6 +28,4 @@ php flarum cache:clear
 
 ## Links
 
-- [Packagist](https://packagist.org/packages/xypp/store)
-- [GitHub](https://github.com/xypp/store)
-- [Discuss](https://discuss.flarum.org/d/PUT_DISCUSS_SLUG_HERE)
+- [GitHub](https://github.com/zxy19/store)
