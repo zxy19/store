@@ -2,6 +2,7 @@
 
 namespace Xypp\Store;
 
+use Flarum\Foundation\ValidationException;
 use Flarum\User\User;
 use Illuminate\Database\Eloquent\Builder;
 use Middlewares\Utils\HttpErrorException;
@@ -9,43 +10,93 @@ use Xypp\Store\StoreItem;
 
 class StoreItemRepository
 {
-    private static $extDataSerializers = [];
-    private static $afterPurchaseOps = [];
-    private static $extLimits = [];
-    public static function addExtDataSerializer(string $extName, callable $dataAttributes, callable $afterPurchase): void
+    private static array $extendProvider = [];
+    public static function addProvider(AbstractStoreProvider $provider): void
     {
-        self::$extDataSerializers[$extName] = $dataAttributes;
-        self::$afterPurchaseOps[$extName] = $afterPurchase;
+        self::$extendProvider[$provider->name] = $provider;
     }
-    public static function addExtLimitSerializer($extName, $limit)
+    public static function getProvider(string $name): AbstractStoreProvider
     {
-        self::$extLimits[$extName] = $limit;
+        if (!isset(self::$extendProvider[$name])) {
+            throw new ValidationException(["provider" => "$name is not a valid store item provider"]);
+        }
+        return self::$extendProvider[$name];
     }
-    public static function getAttrData(StoreItem $item)
+    public static function hasProvider(string $name): bool
     {
-        $extName = $item->provider;
-        if (isset(self::$extDataSerializers[$extName])) {
-            return self::$extDataSerializers[$extName]($item);
+        if (!$name)
+            return false;
+        return isset(self::$extendProvider[$name]);
+    }
+    public static function getAttrData(StoreItem $item): array
+    {
+        if (!self::hasProvider($item->provider))
+            return ['_unavailable' => true];
+        return self::getProvider($item->provider)->serialize($item);
+    }
+    public static function getAttrHistory(PurchaseHistory $item): array
+    {
+        if (!self::hasProvider($item->provider))
+            return ['_unavailable' => true];
+        return self::getProvider($item->provider)->serializeHistory($item);
+    }
+    public static function applyPurchase($actor, StoreItem $item, PurchaseHistory $old = null): string
+    {
+        $result = self::getProvider($item->provider)->purchase($item, $actor, $old);
+        if (is_string($result)) {
+            return $result;
+        } else if (is_bool($result)) {
+            if ($result == true)
+                return "";
+            else
+                throw new ValidationException(["error" => "common.cannot"]);
+        } else if (is_array($result) && count($result) == 2 && is_bool($result[0]) && is_string($result[1])) {
+            if ($result[0] == true)
+                return $result[1];
+            else
+                throw new ValidationException(["error" => $result[1]]);
         } else {
-            throw new HttpErrorException("$extName is not a valid store item provider", 404);
+            throw new ValidationException(["error" => "common.unknown"]);
         }
     }
-    public static function applyPurchase($actor, $item)
+    public static function applyExpire($item)
     {
-        $extName = $item->provider;
-        if (isset(self::$afterPurchaseOps[$extName])) {
-            return self::$afterPurchaseOps[$extName]($actor, $item);
-        } else {
-            throw new HttpErrorException("$extName is not a valid store item provider", 404);
-        }
+        return self::getProvider($item->provider)->expire($item);
     }
-    public static function isAvailable($actor, $item, $hasPurchased)
+    public static function isAvailable($actor, $item): bool|string
     {
-        $extName = $item->provider;
-        if (isset(self::$extLimits[$extName])) {
-            return self::$extLimits[$extName]($actor, $item, $hasPurchased);
-        } else {
-            return true;
+        if (!is_null($item->rest_cnt) && $item->rest_cnt <= 0)
+            return "common.no_rest";
+        if (!self::hasProvider($item->provider))
+            return "common.unknown";
+        return self::getProvider($item->provider)->canPurchase($item, $actor);
+    }
+    public static function providersShowInHistory(): array
+    {
+        $ret = [];
+        foreach (self::$extendProvider as $key => $provider) {
+            if ($provider->canSeeInHistory) {
+                $ret[] = $key;
+            }
         }
+        return $ret;
+    }
+    public static function isSingleHold($item): bool
+    {
+        if (!self::hasProvider($item->provider))
+            return false;
+        return self::getProvider($item->provider)->singleHold;
+    }
+    public static function canUse($item): bool
+    {
+        if (!self::hasProvider($item->provider))
+            return false;
+        return self::getProvider($item->provider)->canUse;
+    }
+    public static function useItem(PurchaseHistory $item, User $actor, string $data): bool
+    {
+        if (!self::hasProvider($item->provider))
+            return false;
+        return self::getProvider($item->provider)->useItem($item, $actor, $data);
     }
 }

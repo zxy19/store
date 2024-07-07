@@ -1,8 +1,9 @@
 <?php
 
-namespace Xypp\Store\Api\Controller;
+namespace Xypp\Store\Api\Controller\storeItems;
 
 use Flarum\Api\Controller\AbstractDeleteController;
+use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Tobscure\JsonApi\Document;
@@ -20,6 +21,9 @@ class RemoveStoreItemController extends AbstractDeleteController
         $actor = RequestUtil::getActor($request);
         $actor->assertCan("removeStoreItem");
         $id = Arr::get($request->getQueryParams(), 'id');
-        StoreItem::findOrFail($id)->delete();
+        $item = StoreItem::findOrFail($id);
+        if (!StoreItemRepository::applyExpire($item))
+            throw new ValidationException(["msg" => "fail_expire"]);
+        $item->delete();
     }
 }

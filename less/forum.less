@@ -10,6 +10,17 @@
 .StoreListContainer {
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
+}
+
+.store-history-page {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.store-item.invalid {
+    filter: grayscale(1);
 }
 
 .store-item {
@@ -17,7 +28,7 @@
     flex-basis: 250px;
     border-radius: 5px;
     box-shadow: 0 0 2px var(--primary-color);
-    height: 260px;
+    height: 280px;
     text-align: center;
     margin: 3px;
     overflow: hidden;
@@ -44,12 +55,14 @@
     }
 
 
-    .store-item-bottom {
+    .store-item-bottom,
+    .store-item-info {
         background: var(--body-bg);
         position: absolute;
         bottom: 0;
         width: 100%;
         left: 0;
+        height: 36px;
         display: flex;
         justify-content: space-between;
         border-radius: var(--border-radius);
@@ -59,6 +72,10 @@
         }
 
         .store-item-price {
+            padding: 8px 10px;
+        }
+
+        .store-item-rest {
             padding: 8px 10px;
         }
     }
@@ -73,14 +90,39 @@
         opacity: 0.1;
         transition: opacity 0.5s;
     }
+
     .edit-store-item:hover {
         opacity: 1;
         cursor: pointer;
-      }
+    }
 
     .store-item-description {
         height: 72px;
     }
 
+    .store-item-info.store-item-info {
+        bottom: 36px;
+        height: 20px;
+    }
+}
 
+
+.delete-history {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 6px 9px;
+    border-radius: 20px;
+    opacity: 0.1;
+    transition: opacity 0.5s;
+}
+
+.delete-history:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+#xypp-store-create-selector-provider_data {
+    width: 100%;
 }

@@ -4,6 +4,7 @@ import Button from 'flarum/common/components/Button';
 import Select from 'flarum/common/components/Select';
 import setRouteWithForcedRefresh from 'flarum/common/utils/setRouteWithForcedRefresh';
 import LinkButton from 'flarum/common/components/LinkButton';
+import Switch from 'flarum/common/components/Switch';
 export default class CreateItemModal extends Modal {
   loading = false;
   selectedProvider: string = "unknown";
@@ -18,8 +19,8 @@ export default class CreateItemModal extends Modal {
     return 'Modal--small';
   }
   title() {
-    if ((this.attrs as any).item_id) {
-      return app.translator.trans("xypp-store.forum.create-modal.edit-title", [(this.attrs as any).item_id] as any)
+    if ((this.attrs as any)?.item_id) {
+      return app.translator.trans("xypp-store.forum.create-modal.edit-title", [(this.attrs as any)?.item_id] as any)
     }
     return app.translator.trans('xypp-store.forum.create-modal.title');
   }
@@ -30,12 +31,15 @@ export default class CreateItemModal extends Modal {
   oncreate(vnode: any): void {
     super.oncreate(vnode);
     if ((this.attrs as any).item_id) {
-      const data = app.store.getById('store-items', (this.attrs as any).item_id);
+      const data = app.store.getById('store-item', (this.attrs as any).item_id);
       this.$('#xypp-store-create-ipt-name').val(data?.attribute("name") as string);
       this.$('#xypp-store-create-ipt-desc').val(data?.attribute("desc") as string);
       this.$('#xypp-store-create-ipt-price').val(data?.attribute("price") as string);
       this.$('#xypp-store-create-ipt-provider').val(data?.attribute("provider") as string);
       this.$('#xypp-store-create-ipt-provider_data').val(data?.attribute("provider_data") as string);
+      this.$('#xypp-store-create-ipt-expire_time').val(data?.attribute("expire_time") as string);
+      this.$('#xypp-store-create-ipt-rest_cnt').val(data?.attribute("rest_cnt") as string);
+      this.$('#xypp-store-create-ipt-use_cnt').val(data?.attribute("use_cnt") as string);
     }
   }
   content() {
@@ -56,13 +60,29 @@ export default class CreateItemModal extends Modal {
             <input id="xypp-store-create-ipt-price" required className="FormControl" type="number" step="any" />
           </div>
           <div className="Form-group">
+            <label for="xypp-store-create-ipt-use_cnt">{app.translator.trans('xypp-store.forum.create-modal.use_cnt')}</label>
+            <input id="xypp-store-create-ipt-use_cnt" className="FormControl" step="any" />
+          </div>
+          <div className="Form-group">
+            <label for="xypp-store-create-ipt-expire_time">{app.translator.trans('xypp-store.forum.create-modal.expire_time')}</label>
+            <input id="xypp-store-create-ipt-expire_time" className="FormControl" step="any" />
+            <p>
+              {app.translator.trans('xypp-store.forum.create-modal.expire_time_tip')}
+            </p>
+          </div>
+          <div className="Form-group">
+            <label for="xypp-store-create-ipt-rest_cnt">{app.translator.trans('xypp-store.forum.create-modal.rest_cnt')}</label>
+            <input id="xypp-store-create-ipt-rest_cnt" className="FormControl" step="any" />
+            <p>
+              {app.translator.trans('xypp-store.forum.create-modal.rest_cnt_tip')}
+            </p>
+          </div>
+          <div className="Form-group">
             <label for="xypp-store-create-ipt-provider">{app.translator.trans('xypp-store.forum.create-modal.provider')}</label>
-            <input id="xypp-store-create-ipt-provider" required className="FormControl" type="text" step="any" />
             <Select id="xypp-store-create-selector-provider" value={this.selectedProvider} options={this.providers} onchange={this.changeProvider.bind(this)}></Select>
           </div>
           <div className="Form-group">
             <label for="xypp-store-create-ipt-provider_data">{app.translator.trans('xypp-store.forum.create-modal.provider_data')}</label>
-            <input id="xypp-store-create-ipt-provider_data" required className="FormControl" type="text" step="any" />
             <Select id="xypp-store-create-selector-provider_data" value={this.selectedData} options={this.providerDatas} onchange={this.changeProviderData.bind(this)}></Select>
           </div>
           <div className="Form-group">
@@ -77,11 +97,21 @@ export default class CreateItemModal extends Modal {
             }
           </div>
         </div>
-      </div>
+      </div >
     );
   }
   async onsubmit(e: any) {
     e.preventDefault();
+    if (this.selectedData === "unknown" || this.selectedProvider === "unknown" || this.selectedProvider.startsWith("to_select_")) {
+      if ((this.attrs as any).item_id) {
+        const data = app.store.getById('store-item', (this.attrs as any).item_id);
+        this.selectedData = data?.attribute("provider_data") as string;
+        this.selectedProvider = data?.attribute("provider") as string;
+      } else {
+        app.alerts.show({ type: 'error' }, app.translator.trans('xypp-store.forum.create-modal.provider_data_error'));
+        return;
+      }
+    }
     this.loading = true;
     try {
       await app.request({
@@ -93,8 +123,12 @@ export default class CreateItemModal extends Modal {
             name: this.$('#xypp-store-create-ipt-name').val(),
             desc: this.$('#xypp-store-create-ipt-desc').val(),
             price: this.$('#xypp-store-create-ipt-price').val(),
-            provider: this.$('#xypp-store-create-ipt-provider').val(),
-            provider_data: this.$('#xypp-store-create-ipt-provider_data').val(),
+            provider: this.selectedProvider,
+            provider_data: this.selectedData,
+            rest_cnt: this.$('#xypp-store-create-ipt-rest_cnt').val(),
+            expire_time: this.$('#xypp-store-create-ipt-expire_time').val(),
+            use_cnt: this.$('#xypp-store-create-ipt-use_cnt').val(),
+
           },
         },
       });

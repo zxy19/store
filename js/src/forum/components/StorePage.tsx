@@ -6,10 +6,18 @@ import app from 'flarum/forum/app';
 import StoreItemComponent from '../components/StoreItemComponent';
 import Button from 'flarum/common/components/Button';
 import CreateItemModal from '../../forum/components/CreateItemModal';
+import Select from 'flarum/common/components/Select';
+import StoreItemUtils from '../utils/StoreItemUtils';
 
 export default class StorePage extends Page {
   loading: boolean = false;
   record: any[] = [];
+  filters: Record<string, string> = {};
+  currentFilter: string = "all";
+  oninit(vnode: any): void {
+    super.oninit(vnode);
+    StoreItemUtils.getInstance().getFilterProviderDict(this.filters);
+  }
   oncreate(vnode: any): void {
     super.oncreate(vnode);
     this.reloadItem();
@@ -25,7 +33,7 @@ export default class StorePage extends Page {
             </nav>
             <div class="StoreListPage">
               <div class="store-list-title">
-                <h1>{app.translator.trans('xypp-store.forum.store')}</h1>
+                <Select options={this.filters} value={this.currentFilter} onchange={this.changeFilter.bind(this)}></Select>
                 {!(app.session.user as any).canCreateStoreItem() ? (
                   ''
                 ) : (
@@ -47,15 +55,20 @@ export default class StorePage extends Page {
             </div>
           </div>
         </div>
-      </div>
+      </div >
     );
   }
-
+  changeFilter(e: string) {
+    this.currentFilter = e;
+    this.reloadItem();
+  }
   async reloadItem() {
     this.loading = true;
     m.redraw();
-    await app.store.find('store-item');
-    this.record = app.store.all('store-items');
+    let type: string | undefined = this.currentFilter;
+    if (type == "all") type = undefined;
+    await app.store.find('store-item', { type } as any);
+    this.record = app.store.all('store-item');
     this.loading = false;
     m.redraw();
   }

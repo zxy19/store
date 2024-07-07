@@ -1,16 +1,19 @@
 xypp-store:
   forum:
+    time_segs: "日|时|分"
     store: 商店
     create: 创建商品
     purchase: 购买
     edit_button: 编辑
     show_case: 橱窗
     provider:
+      all: 所有
       error:
         title: 未知商品提供者
     unavailable:
       common:
         unknown: "无法购买此商品"
+        no_rest: "没有剩余"
     create-modal:
       title: 创建商品
       name: 商品名
@@ -18,6 +21,11 @@ xypp-store:
       price: 价格
       provider: 商品提供者
       provider_data: 商品提供者数据
+      use_cnt: 可用次数
+      expire_time: 过期时间
+      expire_time_tip: "留空表示无限期，否则填写生效时间（秒数）"
+      rest_cnt: 剩余数量/总量
+      rest_cnt_tip: "留空表示无限量"
       edit-title: 编辑物品#{0}
       edit-button: 编辑
       button: 创建
@@ -27,4 +35,19 @@ xypp-store:
         unknown: "选择商品提供者"
         unknown_data: "需要选择提供者"
         no_select_data: "选择提供者数据"
+      provider_data_error: "请选择提供者和数据"
+
     purchase-confirm: "确定购买吗?"
+    item:
+      rest_cnt: "{0}剩余"
+      use_cnt: "{0}次可用"
+      expire: 有效期{0}
+    history:
+      delete_button: 删除已购项目
+      confirm_delete: 确定删除这件你购买的商品吗？
+      title: 已购项目
+      use: 使用
+      rest_cnt: "{0}剩余"
+      infinit: 无限
+      expire: 在{0}后超时
+      forever: 永久

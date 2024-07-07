@@ -1,16 +1,19 @@
 xypp-store:
   forum:
+    time_segs: "days|hours|minutes"
     store: Store
     create: Create Item
     purchase: Purchase
     edit_button: Edit
     show_case: Showcase
     provider:
+      all: All
       error:
         title: Unknown provider
     unavailable:
       common:
         unknown: "Unable to Purchase"
+        no_rest: "No rest"
     create-modal:
       title: Create Item
       name: Name
@@ -18,6 +21,11 @@ xypp-store:
       price: Price
       provider: Provider
       provider_data: Provider Data
+      use_cnt: Times can be used
+      expire_time: Expire Time
+      expire_time_tip: Set to blank to disable, or set to a number to expire after that many seconds.
+      rest_cnt: Rest Count
+      rest_cnt_tip: Set to blank to be infinite, or set to a number to limit the count.
       edit-title: Edit Item#{0}
       edit-button: Edit
       button: Create
@@ -27,4 +35,18 @@ xypp-store:
         unknown: "Select Provider"
         unknown_data: "Need to select provider first"
         no_select_data: "Select Provider Data"
+      provider_data_error: "Please select provider and data"
     purchase-confirm: "Confirm Purchase?"
+    item:
+      rest_cnt: "{0} left"
+      use_cnt: "{0} uses"
+      expire: For {0}
+    history:
+      delete_button: Delete
+      confirm_delete: Sure to delete this item you has bought?
+      title: Purchased
+      use: Use
+      rest_cnt: "{0} left"
+      infinit: Infinit
+      expire: Expire at {0}
+      forever: Forever

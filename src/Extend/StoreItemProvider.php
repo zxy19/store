@@ -2,37 +2,22 @@
 namespace Xypp\Store\Extend;
 
 use Flarum\Extend\ExtenderInterface;
+use Flarum\Foundation\ContainerUtil;
 use Xypp\Store\StoreItemRepository;
 
 class StoreItemProvider implements ExtenderInterface
 {
 
-    private $extDataSerializers = [];
-    private $extLimitSerializers = [];
+    private array $extendStoreProviders = [];
     public function extend($container, $extension = null)
     {
-        foreach ($this->extDataSerializers as $provider) {
-            StoreItemRepository::addExtDataSerializer($provider[0], $provider[1], $provider[2]);
-        }
-        foreach ($this->extLimitSerializers as $provider) {
-            StoreItemRepository::addExtLimitSerializer($provider[0], $provider[1]);
+        foreach ($this->extendStoreProviders as $provider) {
+            StoreItemRepository::addProvider($container->make($provider));
         }
     }
-    public function provide(string $typeName, callable $dataAttributes, callable $afterPurchaseCallback)
+    public function provide($provider)
     {
-        $this->extDataSerializers[] = [
-            $typeName,
-            $dataAttributes,
-            $afterPurchaseCallback
-        ];
-        return $this;
-    }
-    public function limit(string $typeName, callable $limitCallback)
-    {
-        $this->extLimitSerializers[] = [
-            $typeName,
-            $limitCallback
-        ];
+        $this->extendStoreProviders[] = $provider;
         return $this;
     }
 }

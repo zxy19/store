@@ -1,6 +1,6 @@
 <?php
 
-namespace Xypp\Store\Api\Controller;
+namespace Xypp\Store\Api\Controller\storeItems;
 
 use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
@@ -20,9 +20,14 @@ class listStoreItemController extends AbstractListController
     protected function data(Request $request, Document $document)
     {
         $actor = RequestUtil::getActor($request);
-        $result = StoreItem::all();
+        $type = Arr::get($request->getQueryParams(), "type", "");
+        if ($type) {
+            $result = StoreItem::where("provider", $type);
+        } else {
+            $result = StoreItem::all();
+        }
         foreach ($result as $item) {
-            $r = StoreItemRepository::isAvailable($actor, $item, PurchaseHistory::where('user_id', $actor->id)->count());
+            $r = StoreItemRepository::isAvailable($actor, $item);
             if ($r === true) {
                 $item->unavailable = false;
             } else {

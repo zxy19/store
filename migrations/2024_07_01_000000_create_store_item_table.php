@@ -16,5 +16,8 @@ return Migration::createTable(
         $table->string('provider_data');
         $table->boolean('is_enabled');
         $table->boolean('is_valid');
+        $table->integer('rest_cnt')->nullable();
+        $table->integer('use_cnt')->nullable();
+        $table->integer('expire_time')->nullable();
     }
 );

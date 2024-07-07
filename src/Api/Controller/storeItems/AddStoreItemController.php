@@ -1,9 +1,10 @@
 <?php
 
-namespace Xypp\Store\Api\Controller;
+namespace Xypp\Store\Api\Controller\storeItems;
 
 use Carbon\Carbon;
 use Flarum\Api\Controller\AbstractCreateController;
+use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Tobscure\JsonApi\Document;
@@ -24,6 +25,9 @@ class AddStoreItemController extends AbstractCreateController
         $attributes = Arr::get($request->getParsedBody(), 'attributes', []);
         if (Arr::get($attributes, 'id')) {
             $model = StoreItem::findOrFail(Arr::get($attributes, 'id'));
+            if (!$model instanceof StoreItem) {
+                throw new ValidationException(["error" => "edit.item_not_found"]);
+            }
         } else {
             $model = new StoreItem();
         }
@@ -32,7 +36,16 @@ class AddStoreItemController extends AbstractCreateController
         $model->price = Arr::get($attributes, 'price');
         $model->provider = Arr::get($attributes, 'provider');
         $model->provider_data = Arr::get($attributes, 'provider_data');
-        $model->dataAttrs = StoreItemRepository::getAttrData($model);
+        $model->expire_time = Arr::get($attributes, 'expire_time');
+        if ($model->expire_time === "") {
+            $model->expire_time = null;
+        }
+        $model->rest_cnt = Arr::get($attributes, 'rest_cnt');
+        if ($model->rest_cnt === "") {
+            $model->rest_cnt = null;
+        }
+        $model->use_cnt = Arr::get($attributes, 'use_cnt');
+        StoreItemRepository::getAttrData($model);
         $model->save();
         return $model;
     }

@@ -3,6 +3,7 @@
 namespace Xypp\Store\Api\Serializer;
 
 use Flarum\Api\Serializer\AbstractSerializer;
+use Illuminate\Support\Arr;
 use Xypp\Store\StoreItem;
 use InvalidArgumentException;
 use Xypp\Store\StoreItemRepository;
@@ -12,7 +13,7 @@ class StoreItemSerializer extends AbstractSerializer
     /**
      * {@inheritdoc}
      */
-    protected $type = 'store-items';
+    protected $type = 'store-item';
     /**
      * {@inheritdoc}
      *
@@ -38,9 +39,14 @@ class StoreItemSerializer extends AbstractSerializer
             "name" => $model->name,
             "desc" => $model->desc,
             "price" => $model->price,
-            "data" => $model->dataAttrs,
             "unavailable" => $model->unavailable,
-            "provider_data" => $model->provider_data
+            "provider_data" => $model->provider_data,
+            "data" => $model->dataAttrs,
+            "expire_time" => $model->expire_time,
+            "rest_cnt" => $model->rest_cnt,
+            "use_cnt" => $model->use_cnt,
+            "valid" => !Arr::get($model->dataAttrs, "_unavailable", false),
+            "can_use" => StoreItemRepository::canUse($model)
         ];
     }
 }
