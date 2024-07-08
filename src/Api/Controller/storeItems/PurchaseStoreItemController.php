@@ -9,15 +9,16 @@ use Middlewares\Utils\HttpErrorException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Tobscure\JsonApi\Document;
 use Illuminate\Support\Arr;
+use Xypp\Store\Context\PurchaseContext;
 use Xypp\Store\PurchaseHistory;
 use Xypp\Store\StoreItem;
-use Xypp\Store\StoreItemRepository;
+use Xypp\Store\Helper\StoreHelper;
 use Carbon\Carbon;
 
 class PurchaseStoreItemController extends AbstractCreateController
 {
     public $serializer = \Xypp\Store\Api\Serializer\PurchaseHistorySerializer::class;
-    protected StoreItemRepository $storeItemRepository;
+    protected StoreHelper $StoreHelper;
 
     protected function data(Request $request, Document $document)
     {
@@ -26,23 +27,30 @@ class PurchaseStoreItemController extends AbstractCreateController
         $item = StoreItem::findOrFail($id);
 
         if ($actor->money < $item->price) {
-            throw new ValidationException(['msg' => "common.not_enough_money"]);
+            throw new ValidationException(['msg' => "xypp-store.forum.purchase_result.fail.not_enough_money"]);
         }
         if (!is_null($item->rest_cnt)) {
             if ($item->rest_cnt <= 0) {
-                throw new ValidationException(['msg' => "common.not_enough_item"]);
+                throw new ValidationException(['msg' => "xypp-store.forum.purchase_result.fail.not_enough_item"]);
             }
-            $item->rest_cnt--;
-            $item->save();
         }
-        if (StoreItemRepository::isSingleHold($item)) {
+
+        // 已经完成判断初步的购买条件。模拟用户已经完成购买，扣款并扣库存
+        $item->rest_cnt--;
+        $item->save();
+        $actor->money -= $item->price;
+        $actor->save();
+        if (StoreHelper::isSingleHold($item)) {
             $newModel = PurchaseHistory::where("user_id", $actor->id)->where("item_id", $item->id)->first();
         }
+        $context = new PurchaseContext($actor, $item, $newModel);
         try {
-            $data = StoreItemRepository::applyPurchase($actor, $item, $newModel);
+            $data = StoreHelper::applyPurchase($actor, $item, $newModel, $context);
         } catch (\Exception $e) {
             $item->rest_cnt++;
             $item->save();
+            $actor->money += $item->price;
+            $actor->save();
             throw $e;
         }
         if (!$newModel) {
@@ -61,11 +69,21 @@ class PurchaseStoreItemController extends AbstractCreateController
 
             $newModel->expire_at = $newModel->expire_at->addSeconds($item->expire_time);
         }
-        $newModel->provider = $item->provider;
 
+        if ($context->replaceExpire !== false) {
+            $newModel->expire_at = $context->replaceExpire;
+        }
+        if ($context->noConsume)
+            $item->rest_cnt++;
+        if (!$context->noCostMoney)
+            $actor->money += $item->price;
+
+        if ($item->isDirty())
+            $item->save();
+        if ($actor->isDirty())
+            $actor->save();
+        $newModel->provider = $item->provider;
         $newModel->save();
-        $actor->money -= $item->price;
-        $actor->save();
         return $newModel;
     }
 }

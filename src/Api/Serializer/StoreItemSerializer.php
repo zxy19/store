@@ -6,7 +6,7 @@ use Flarum\Api\Serializer\AbstractSerializer;
 use Illuminate\Support\Arr;
 use Xypp\Store\StoreItem;
 use InvalidArgumentException;
-use Xypp\Store\StoreItemRepository;
+use Xypp\Store\Helper\StoreHelper;
 
 class StoreItemSerializer extends AbstractSerializer
 {
@@ -30,7 +30,7 @@ class StoreItemSerializer extends AbstractSerializer
 
         // See https://docs.flarum.org/extend/api.html#serializers for more information.
         if ($model->dataAttrs == null) {
-            $model->dataAttrs = StoreItemRepository::getAttrData($model);
+            $model->dataAttrs = StoreHelper::getAttrData($model);
         }
 
         return [
@@ -45,8 +45,7 @@ class StoreItemSerializer extends AbstractSerializer
             "expire_time" => $model->expire_time,
             "rest_cnt" => $model->rest_cnt,
             "use_cnt" => $model->use_cnt,
-            "valid" => !Arr::get($model->dataAttrs, "_unavailable", false),
-            "can_use" => StoreItemRepository::canUse($model)
+            "valid" => !Arr::get($model->dataAttrs, "_unavailable", false)
         ];
     }
 }

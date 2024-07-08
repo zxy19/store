@@ -3,6 +3,8 @@
 namespace Xypp\Store;
 
 use Flarum\User\User;
+use Xypp\Store\Context\PurchaseContext;
+use Xypp\Store\Context\UseContext;
 
 abstract class AbstractStoreProvider
 {
@@ -20,6 +22,12 @@ abstract class AbstractStoreProvider
      */
     public $canUse = false;
 
+    /**
+     * Whether the item show use button in frontend.
+     * It will not effect on box that opened by UseHelper.query()
+     * If false, item will be marked as cannot use in frontend.
+     */
+    public $canUseFrontend = true;
     /**
      * Whether the user can hold multiple items.
      * If true, when purchase the item, expire time will culminate.
@@ -52,7 +60,7 @@ abstract class AbstractStoreProvider
      * @param User $user
      * @return array|bool|string
      */
-    public abstract function purchase(StoreItem $item, User $user, PurchaseHistory|null $old = null): array|bool|string;
+    public abstract function purchase(StoreItem $item, User $user, PurchaseHistory|null $old = null, PurchaseContext $context): array|bool|string;
 
     /**
      * Operation of use the item.
@@ -60,7 +68,7 @@ abstract class AbstractStoreProvider
      * @param User $user
      * @return bool
      */
-    public function useItem(PurchaseHistory $item, User $user,string $data): bool
+    public function useItem(PurchaseHistory $item, User $user, string $data, UseContext $context): bool
     {
         return false;
     }

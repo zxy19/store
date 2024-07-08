@@ -51,3 +51,4 @@ xypp-store:
       infinit: 无限
       expire: 在{0}后超时
       forever: 永久
+      confirm_use: "确定使用吗?"

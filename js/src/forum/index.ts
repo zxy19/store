@@ -8,10 +8,10 @@ import StoreItemUtils from './utils/StoreItemUtils';
 import Model from 'flarum/common/Model';
 import User from 'flarum/common/models/User';
 import CreateItemModal from "./components/CreateItemModal"
-import { addFrontendProviders } from './utils/frontendApplier';
+import { addFrontendProviders } from './utils/FrontendApplier';
 import UserPage from 'flarum/forum/components/UserPage';
-import { PurchaseHelper } from './utils/PurchaseHelper';
-import { UseHelper } from './utils/UseHelper';
+import { PurchaseHelper } from './helper/PurchaseHelper';
+import { UseHelper } from './helper/UseHelper';
 app.initializers.add('xypp/store', () => {
   //@ts-ignore
   User.prototype.canCreateStoreItem = Model.attribute('canCreateStoreItem');

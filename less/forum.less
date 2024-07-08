@@ -1,4 +1,5 @@
 .StoreListPage {
+    padding-top: 30px;
     width: 100%;
 }
 
@@ -47,11 +48,18 @@
             background: var(--primary-color);
             color: var(--body-bg);
             padding: 0 2px 2px 2px;
+            z-index: 100;
+            transition: opacity 0.5s;
+            opacity: 1;
         }
     }
 
     .store-item-showcase:hover {
         height: 174px;
+
+        .store-item-showcase-tip {
+            opacity: 0;
+        }
     }
 
 
@@ -125,4 +133,10 @@
 
 #xypp-store-create-selector-provider_data {
     width: 100%;
+}
+
+.query-control{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }

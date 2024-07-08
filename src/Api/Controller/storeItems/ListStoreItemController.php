@@ -10,10 +10,10 @@ use Tobscure\JsonApi\Document;
 use Illuminate\Support\Arr;
 use Xypp\Store\PurchaseHistory;
 use Xypp\Store\StoreItem;
-use Xypp\Store\StoreItemRepository;
+use Xypp\Store\Helper\StoreHelper;
 
 
-class listStoreItemController extends AbstractListController
+class ListStoreItemController extends AbstractListController
 {
     public $serializer = \Xypp\Store\Api\Serializer\StoreItemSerializer::class;
 
@@ -22,12 +22,12 @@ class listStoreItemController extends AbstractListController
         $actor = RequestUtil::getActor($request);
         $type = Arr::get($request->getQueryParams(), "type", "");
         if ($type) {
-            $result = StoreItem::where("provider", $type);
+            $result = StoreItem::where("provider", $type)->get();
         } else {
             $result = StoreItem::all();
         }
         foreach ($result as $item) {
-            $r = StoreItemRepository::isAvailable($actor, $item);
+            $r = StoreHelper::isAvailable($actor, $item);
             if ($r === true) {
                 $item->unavailable = false;
             } else {

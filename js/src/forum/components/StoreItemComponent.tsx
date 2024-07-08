@@ -5,8 +5,9 @@ import Button from 'flarum/common/components/Button';
 import app from 'flarum/forum/app';
 import setRouteWithForcedRefresh from 'flarum/common/utils/setRouteWithForcedRefresh';
 import CreateItemModal from '../components/CreateItemModal';
-import { showIf } from "../utils/nodeUtil"
-import { effectLengthFormat } from '../utils/timeUtils';
+import { showIf } from "../utils/NodeUtil"
+import { effectLengthFormat } from '../utils/TimeUtils';
+import Alert from 'flarum/common/components/Alert';
 
 export default class StoreItemComponent extends Component {
   loading: boolean = false;
@@ -24,14 +25,14 @@ export default class StoreItemComponent extends Component {
         <h3>{item.name()}</h3>
         <div class="store-item-showcase">
           <div className='store-item-showcase-tip'>
-            {app.translator.trans('xypp-store.forum.type.' + item.provider())}
+            {StoreItemUtils.getInstance().getProviderName(item.provider() as string)}
           </div>
           {StoreItemUtils.getInstance().createItemShowCase(item)}
         </div>
         <div class="store-item-description">{item.desc()}</div>
         <div class="store-item-info">
           <span className=''>
-            {showIf(!!(item.rest_cnt()!==null),
+            {showIf(!!(item.rest_cnt() !== null),
               app.translator.trans('xypp-store.forum.item.rest_cnt', [item.rest_cnt()] as any),
               app.translator.trans('xypp-store.forum.history.infinit'))}
           </span>
@@ -80,6 +81,10 @@ export default class StoreItemComponent extends Component {
       setTimeout(this.resetConfirm.bind(this), 6000);
       return;
     }
+    if ((this.attrs as any).onBuy) {
+      (this.attrs as any).onBuy();
+      return;
+    }
     this.loading = true;
     m.redraw();
     try {
@@ -87,6 +92,7 @@ export default class StoreItemComponent extends Component {
         method: 'GET',
         url: app.forum.attribute('apiUrl') + '/store-item/' + (this.attrs as any).item.id() + '/purchase',
       });
+      app.alerts.show(Alert, { type: "success" }, app.translator.trans('xypp-store.forum.purchase_result.success'));
       setRouteWithForcedRefresh(app.route("storePage"));
     } catch (e) {
       console.log(e);

@@ -16,7 +16,7 @@ export function addFrontendProviders(
     provider: string,
     name: string,
     getProviderData: (providerDatas: { [key: string]: string }) => Promise<void>,
-    getShowCase: (item: StoreItem) => any,
+    getShowCase: (item: StoreItem, purchase_history?: PurchaseHistory) => any,
     getUseData: (item: PurchaseHistory) => Promise<string>
 ): void {
     if (getProviderData) {
@@ -38,14 +38,14 @@ export function addFrontendProviders(
         if (provider === comingProvider) {
             return name;
         }
-        return _originFunc(provider);
+        return _originFunc(comingProvider);
     });
     if (getShowCase) {
-        override(StoreItemUtils.prototype, "createItemShowCase", function (_originFunc: any, item: StoreItem) {
+        override(StoreItemUtils.prototype, "createItemShowCase", function (_originFunc: any, item: StoreItem, purchase_history?: PurchaseHistory) {
             if (item.provider() == provider) {
-                return getShowCase(item);
+                return getShowCase(item, purchase_history);
             }
-            return _originFunc(item);
+            return _originFunc(item, purchase_history);
         })
     }
     if (getUseData) {

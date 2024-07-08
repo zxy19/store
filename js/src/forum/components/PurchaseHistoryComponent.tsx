@@ -6,9 +6,11 @@ import app from 'flarum/forum/app';
 import setRouteWithForcedRefresh from 'flarum/common/utils/setRouteWithForcedRefresh';
 import CreateItemModal from './CreateItemModal';
 import PurchaseHistory from '../../common/models/PurchaseHistory';
-import { showIf } from "../utils/nodeUtil"
+import { showIf } from "../utils/NodeUtil"
 import dayjs from 'dayjs';
-import { expireTimeFormat } from '../utils/timeUtils';
+import { expireTimeFormat } from '../utils/TimeUtils';
+import Alert from 'flarum/common/components/Alert';
+import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 
 export default class PurchaseHistoryComponent extends Component {
   loading: boolean = false;
@@ -21,14 +23,14 @@ export default class PurchaseHistoryComponent extends Component {
         <h3>{storeItem.name()}</h3>
         <div class="store-item-showcase">
           <div className='store-item-showcase-tip'>
-            {app.translator.trans('xypp-store.forum.type.' + item.provider())}
+            {StoreItemUtils.getInstance().getProviderName(storeItem.provider() as string)}
           </div>
-          {StoreItemUtils.getInstance().createItemShowCase(storeItem)}
+          {showIf(this.loading, <LoadingIndicator />, StoreItemUtils.getInstance().createItemShowCase(storeItem, item))}
         </div>
         <div class="store-item-description">{storeItem.desc()}</div>
         <div class="store-item-info">
           {showIf(!!item.can_use(), <span className=''>
-            {showIf(item.rest_cnt()!==null,
+            {showIf(item.rest_cnt() !== null,
               app.translator.trans('xypp-store.forum.history.rest_cnt', [item.rest_cnt()] as any),
               app.translator.trans('xypp-store.forum.history.infinit'))}
           </span>, <span></span>)}
@@ -39,14 +41,14 @@ export default class PurchaseHistoryComponent extends Component {
           </span>
         </div>
         <span className='text-separate store-item-bottom'>
-          {showIf(!!(item.can_use()), [
+          {showIf(!!(item.can_use()) || !!((this.attrs as any).alwaysShowBtn), [
             <span></span>,
             <Button
               className='store-item-button Button Button--primary'
               onclick={this.use.bind(this)}
               loading={this.loading}
               disabled={this.loading}>
-              {app.translator.trans('xypp-store.forum.history.use')}
+              {showIf(this.isConfirm, app.translator.trans('xypp-store.forum.history.confirm_use'), app.translator.trans('xypp-store.forum.history.use'))}
             </Button>
           ]
           )}
@@ -61,11 +63,22 @@ export default class PurchaseHistoryComponent extends Component {
     );
   }
   async use() {
+    if (!this.isConfirm) {
+      this.isConfirm = true;
+      setTimeout(this.resetConfirm.bind(this), 6000);
+      return;
+    }
+    if ((this.attrs as any).onUse) {
+      (this.attrs as any).onUse();
+      return;
+    }
     this.loading = true;
     m.redraw();
     await StoreItemUtils.getInstance().use((this.attrs as any).item);
     this.loading = false;
     m.redraw();
+    app.alerts.show(Alert, { type: "success" }, app.translator.trans('xypp-store.forum.use_result.success'));
+    setRouteWithForcedRefresh(app.route('user.purchase_history', { username: (app.current.data as any).user.slug() }));
   }
   async delete() {
     if (confirm(app.translator.trans('xypp-store.forum.history.confirm_delete') as string)) {
@@ -76,6 +89,13 @@ export default class PurchaseHistoryComponent extends Component {
         });
       } catch (ignore) { };
       this.loading = false;
+      m.redraw();
+      setRouteWithForcedRefresh(app.route('user.purchase_history', { username: (app.current.data as any).user.slug() }));
+    }
+  }
+  resetConfirm() {
+    if (this.isConfirm) {
+      this.isConfirm = false;
       m.redraw();
     }
   }

@@ -67,8 +67,7 @@ export default class StorePage extends Page {
     m.redraw();
     let type: string | undefined = this.currentFilter;
     if (type == "all") type = undefined;
-    await app.store.find('store-item', { type } as any);
-    this.record = app.store.all('store-item');
+    this.record = await app.store.find('store-item', { type } as any) as any;
     this.loading = false;
     m.redraw();
   }

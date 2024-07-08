@@ -10,7 +10,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Tobscure\JsonApi\Document;
 use Illuminate\Support\Arr;
 use Xypp\Store\StoreItem;
-use Xypp\Store\StoreItemRepository;
+use Xypp\Store\Helper\StoreHelper;
 
 
 class AddStoreItemController extends AbstractCreateController
@@ -45,7 +45,7 @@ class AddStoreItemController extends AbstractCreateController
             $model->rest_cnt = null;
         }
         $model->use_cnt = Arr::get($attributes, 'use_cnt');
-        StoreItemRepository::getAttrData($model);
+        StoreHelper::getAttrData($model);
         $model->save();
         return $model;
     }

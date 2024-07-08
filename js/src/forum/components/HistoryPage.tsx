@@ -45,6 +45,7 @@ export default class HistoryPage extends UserPage {
     }
     changeFilter(e: string) {
         this.currentFilter = e;
+        this.record = null;
         this.loadData();
     }
     async loadData() {
@@ -53,7 +54,11 @@ export default class HistoryPage extends UserPage {
         if (this.loading) return;
         this.loading = true;
         m.redraw();
-        this.record = await app.store.find("purchase-history", { id: this.user?.id() } as any) as any;
+        let type = undefined;
+        if (this.currentFilter != "all") {
+            type = this.currentFilter;
+        }
+        this.record = await app.store.find("purchase-history", { id: this.user?.id(), type } as any) as any;
         this.loading = false;
         m.redraw();
     }

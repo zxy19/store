@@ -2,14 +2,16 @@
 
 namespace Xypp\Store\Api\Controller\history;
 
+use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use Illuminate\Support\Arr;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Xypp\Store\Context\UseContext;
 use Xypp\Store\PurchaseHistory;
-use Xypp\Store\StoreItemRepository;
+use Xypp\Store\Helper\StoreHelper;
 
 
 class UseHistoryController implements RequestHandlerInterface
@@ -19,29 +21,35 @@ class UseHistoryController implements RequestHandlerInterface
         $actor = RequestUtil::getActor($request);
         $id = Arr::get($request->getQueryParams(), 'id');
         if (is_null($id))
-            return new JsonResponse([
-                "error" => "id_not_found"
-            ], 404);
+            throw new ValidationException(["error" => "xypp-store.forum.use_result.fail.id_not_found"]);
         $item = PurchaseHistory::findOrFail($id);
-        if (!StoreItemRepository::canUse($item))
-            return new JsonResponse([
-                "error" => "cant_use"
-            ], 500);
+        if (!StoreHelper::canUse($item))
+            throw new ValidationException(["error" => "xypp-store.forum.use_result.fail.cannot"]);
         if (!is_null($item->rest_cnt) && $item->rest_cnt <= 0) {
-            return new JsonResponse([
-                "error" => "no_rest"
-            ], 500);
+            throw new ValidationException(["error" => "not_enough"]);
         }
         $data = Arr::get($request->getParsedBody(), 'data', "");
         $item->rest_cnt--;
         $item->save();
-        if (!StoreItemRepository::useItem($item, $actor, $data)) {
+        $context = new UseContext($actor, $item);
+        if (!StoreHelper::useItem($item, $actor, $data, $context)) {
             $item->rest_cnt++;
             $item->save();
-            return new JsonResponse([
-                "error" => "fail"
-            ], 500);
+            throw new ValidationException(["error" => "xypp-store.forum.use_result.fail.error"]);
         }
+
+        if ($context->toRemove) {
+            if (StoreHelper::applyExpire($item)) {
+                $item->delete();
+            } else {
+                $item->rest_cnt++;
+                $item->save();
+                throw new ValidationException(["error" => "xypp-store.forum.use_result.fail.fail_expire"]);
+            }
+        }
+        if ($context->noConsume)
+            $item->rest_cnt++;
+
         if ($item->isDirty()) {
             $item->save();
         }

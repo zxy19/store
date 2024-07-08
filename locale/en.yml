@@ -50,3 +50,26 @@ xypp-store:
       infinit: Infinit
       expire: Expire at {0}
       forever: Forever
+      confirm_use: "Confirm to use?"
+    query-modal:
+      purchase:
+        title: "Purchase Item"
+      use:
+        title: "Use Item"
+    use_result:
+      success: "Success"
+      fail:
+        unknown: "Unknown Error"
+        error: "Error on using item"
+        not_enough: "No enough use count"
+        cannot: "Can't use this Item"
+        fail_expire: "Fail when try to expire this Item"
+        id_not_found: "Item ID not found"
+    purchase_result:
+      success: "Success"
+      fail:
+        unknown: "Unknown Error"
+        not_enough_item: "No enough item"
+        cannot: "Can't purchase this Item"
+        not_enough_money: "Not enough money"
+    

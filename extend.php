@@ -14,9 +14,9 @@ namespace Xypp\Store;
 use Flarum\Api\Serializer\BasicUserSerializer;
 use Flarum\Api\Serializer\UserSerializer;
 use Flarum\Extend;
-use Xypp\Store\Api\Controller\history\listHistoryController;
+use Xypp\Store\Api\Controller\history\ListHistoryController;
 use Xypp\Store\Api\Controller\storeItems\AddStoreItemController;
-use Xypp\Store\Api\Controller\storeItems\listStoreItemController;
+use Xypp\Store\Api\Controller\storeItems\ListStoreItemController;
 use Xypp\Store\Api\Controller\storeItems\PurchaseStoreItemController;
 use Xypp\Store\Api\Controller\history\RemoveHistoryController;
 use Xypp\Store\Api\Controller\history\UseHistoryController;
@@ -35,11 +35,11 @@ return [
     //     ->js(__DIR__.'/js/dist/admin.js')
     //     ->css(__DIR__.'/less/admin.less'),
     (new Extend\Routes("api"))
-        ->get("/store-item", "store-item.list", listStoreItemController::class)
+        ->get("/store-item", "store-item.list", ListStoreItemController::class)
         ->post("/store-item", "store-item.create", AddStoreItemController::class)
         ->get("/store-item/{id}/delete", "store-item.delete", RemoveStoreItemController::class)
         ->get("/store-item/{id}/purchase", "store-item.purchase", PurchaseStoreItemController::class)
-        ->get("/purchase-history", "purchase-history.list", listHistoryController::class)
+        ->get("/purchase-history", "purchase-history.list", ListHistoryController::class)
         ->post("/purchase-history/{id}/use", "purchase-history.use", UseHistoryController::class)
         ->get("/purchase-history/{id}/delete", "purchase-history.delete", RemoveHistoryController::class),
     (new Extend\ApiSerializer(UserSerializer::class))

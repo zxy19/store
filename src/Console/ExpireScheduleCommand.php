@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Throwable;
 use Xypp\Store\PurchaseHistory;
-use Xypp\Store\StoreItemRepository;
+use Xypp\Store\Helper\StoreHelper;
 
 class ExpireScheduleCommand extends Command
 {
@@ -24,7 +24,7 @@ class ExpireScheduleCommand extends Command
     {
         PurchaseHistory::where('expire_at', '<', Carbon::now()->toDateTimeString())->get()->each(function ($item) {
             try {
-                if (StoreItemRepository::applyExpire($item)) {
+                if (StoreHelper::applyExpire($item)) {
                     $item->delete();
                     $this->info("Expired item [" . $item->provider . "]" . $item->id . " from user" . "$item->user_id");
                 }

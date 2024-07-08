@@ -1,6 +1,7 @@
 import app from "flarum/forum/app";
 import PurchaseHistory from "../../common/models/PurchaseHistory";
-import StoreItemUtils from "./StoreItemUtils";
+import StoreItemUtils from "../utils/StoreItemUtils";
+import QueryModal from "../components/QueryModal";
 
 export class UseHelper {
     purchaseHistory: PurchaseHistory[];
@@ -12,18 +13,18 @@ export class UseHelper {
         return new UseHelper(await app.store.find("purchase-history", { type: provider } as any) as any);
     }
 
-    filter(predicate: (item: PurchaseHistory) => boolean) {
+    filter(predicate: (item: PurchaseHistory) => boolean): UseHelper {
         this.purchaseHistory = this.purchaseHistory.filter(predicate);
         return this;
     }
-    filterWithData(predicate: (data: Record<string, string>) => boolean) {
+    filterWithData(predicate: (data: Record<string, string>) => boolean): UseHelper {
         this.purchaseHistory = this.purchaseHistory.filter(d => predicate(d.attribute("data")));
         return this;
     }
-    filterAvailable() {
+    filterAvailable(): UseHelper {
         return this.filter(d => { return (d.rest_cnt() as number) > 0 });
     }
-    expireTimeRev() {
+    expireTimeRev(): UseHelper {
         this.purchaseHistory.sort((a, b) => {
             if (a.expire_at() === null) {
                 if (b.expire_at() === null) return 0;
@@ -33,7 +34,7 @@ export class UseHelper {
         });
         return this;
     }
-    expireTime() {
+    expireTime(): UseHelper {
         this.purchaseHistory.sort((a, b) => {
             if (a.expire_at() === null) {
                 if (b.expire_at() === null) return 0;
@@ -43,9 +44,28 @@ export class UseHelper {
         });
         return this;
     }
-    sort(predicate: (a: PurchaseHistory, b: PurchaseHistory) => number) {
+    sort(predicate: (a: PurchaseHistory, b: PurchaseHistory) => number): UseHelper {
         this.purchaseHistory.sort(predicate);
         return this;
+    }
+    query(): Promise<UseHelper> {
+        return new Promise((resolve, reject) => {
+            if (!this.purchaseHistory.length) return resolve(this);
+            const items = this.purchaseHistory;
+            this.purchaseHistory = [];
+            app.modal.show(QueryModal, {
+                items,
+                on_submit: (selected: PurchaseHistory) => {
+                    this.purchaseHistory = [selected];
+                },
+                on_close: () => {
+                    resolve(this);
+                }
+            }, true)
+        });
+    }
+    hasItem(): boolean {
+        return this.purchaseHistory.length > 0;
     }
     async use(data: string): Promise<void> {
         if (!this.purchaseHistory.length) {

@@ -12,7 +12,7 @@ export default class StoreItemUtils {
   public getFilterProviderDict(dict: Record<string, string>) {
     dict['all'] = app.translator.trans("xypp-store.forum.provider.all") as string;
   }
-  public createItemShowCase(item: StoreItem) {
+  public createItemShowCase(item: StoreItem,purchase_history?:PurchaseHistory) {
     return <div class="showcase-error">{app.translator.trans('xypp-store.forum.provider.error.title')}</div>;
   }
   public async getUseData(item: PurchaseHistory): Promise<string> {
@@ -31,6 +31,6 @@ export default class StoreItemUtils {
     });
   }
   public getProviderName(provider: string): string {
-    return app.translator.trans("xypp-store.forum.providers.error.title") as string;
+    return app.translator.trans("xypp-store.forum.provider.error.title") as string;
   }
 }

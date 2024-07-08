@@ -7,7 +7,7 @@ use Illuminate\Support\Arr;
 use Xypp\Store\PurchaseHistory;
 use Xypp\Store\StoreItem;
 use InvalidArgumentException;
-use Xypp\Store\StoreItemRepository;
+use Xypp\Store\Helper\StoreHelper;
 
 class PurchaseHistorySerializer extends AbstractSerializer
 {
@@ -34,13 +34,14 @@ class PurchaseHistorySerializer extends AbstractSerializer
                 get_class($this) . ' can only serialize instances of ' . PurchaseHistory::class
             );
         }
-        $model->dataAttrs = StoreItemRepository::getAttrHistory($model);
+        $model->dataAttrs = StoreHelper::getAttrHistory($model);
 
         return [
             "id" => $model->id,
             "provider" => $model->provider,
-            "data" => $model->data,
-            "can_use" => StoreItemRepository::canUse($model),
+            "data" => $model->dataAttrs,
+            "use_data" => $model->data,
+            "can_use" => StoreHelper::canUse($model,true),
             "expire_at" => $model->expire_at,
             "rest_cnt" => $model->rest_cnt,
             "valid" => !Arr::get($model->dataAttrs, "_unavailable", false)
