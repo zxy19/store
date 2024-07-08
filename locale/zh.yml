@@ -52,3 +52,19 @@ xypp-store:
       expire: 在{0}后超时
       forever: 永久
       confirm_use: "确定使用吗?"
+    use_result:
+      success: "成功"
+      fail:
+        unknown: "未知错误"
+        error: "使用物品时发生错误"
+        not_enough: "物品数量不足"
+        cannot: "无法使用该物品"
+        fail_expire: "尝试过期物品时发生错误"
+        id_not_found: "物品ID未找到"
+    purchase_result:
+      success: "成功"
+      fail:
+        unknown: "未知错误"
+        not_enough_item: "物品数量不足"
+        cannot: "无法购买该物品"
+        not_enough_money: "货币不足"
