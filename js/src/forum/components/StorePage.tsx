@@ -8,7 +8,8 @@ import Button from 'flarum/common/components/Button';
 import CreateItemModal from '../../forum/components/CreateItemModal';
 import Select from 'flarum/common/components/Select';
 import StoreItemUtils from '../utils/StoreItemUtils';
-
+import { showIf } from '../utils/NodeUtil';
+import Placeholder from 'flarum/common/components/Placeholder';
 export default class StorePage extends Page {
   loading: boolean = false;
   record: any[] = [];
@@ -33,6 +34,7 @@ export default class StorePage extends Page {
             </nav>
             <div class="StoreListPage">
               <div class="store-list-title">
+                <h2>{app.translator.trans('xypp-store.forum.store')}</h2>
                 <Select options={this.filters} value={this.currentFilter} onchange={this.changeFilter.bind(this)}></Select>
                 {!(app.session.user as any).canCreateStoreItem() ? (
                   ''
@@ -44,13 +46,13 @@ export default class StorePage extends Page {
                 )}
               </div>
               <div class="StoreListContainer">
-                {this.loading ? (
-                  <LoadingIndicator></LoadingIndicator>
-                ) : (
-                  this.record.map((item) => {
-                    return <StoreItemComponent item={item}></StoreItemComponent>;
-                  })
-                )}
+                {showIf(this.loading, <LoadingIndicator />,
+                  showIf(!!(this.record?.length),
+                    this.record.map((item) => {
+                      return <StoreItemComponent item={item}></StoreItemComponent>;
+                    }),
+                    <Placeholder text={app.translator.trans("xypp-store.forum.item.no_available")} />
+                  ))}
               </div>
             </div>
           </div>

@@ -4,18 +4,26 @@ namespace Xypp\Store\Api\Controller\history;
 
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
+use Illuminate\Bus\Dispatcher;
 use Illuminate\Support\Arr;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Xypp\Store\Context\UseContext;
+use Xypp\Store\Event\UseDone;
 use Xypp\Store\PurchaseHistory;
 use Xypp\Store\Helper\StoreHelper;
 
 
 class UseHistoryController implements RequestHandlerInterface
 {
+
+    protected Dispatcher $events;
+    public function __construct(Dispatcher $events)
+    {
+        $this->events = $events;
+    }
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $actor = RequestUtil::getActor($request);
@@ -49,7 +57,8 @@ class UseHistoryController implements RequestHandlerInterface
         }
         if ($context->noConsume)
             $item->rest_cnt++;
-
+        
+        $this->events->dispatch(new UseDone($actor, $item));
         if ($item->isDirty()) {
             $item->save();
         }

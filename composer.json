@@ -28,7 +28,7 @@
             "category": "feature",
             "icon": {
                 "name": "fas fa-store",
-                "color": "#FFFFFF",
+                "color": "#ffffff",
                 "backgroundColor": "#f44336"
             }
         },

@@ -23,6 +23,8 @@ use Xypp\Store\Api\Controller\history\UseHistoryController;
 use Xypp\Store\Api\Controller\storeItems\RemoveStoreItemController;
 use Xypp\Store\Api\Serializer\PurchaseHistorySerializer;
 use Xypp\Store\Api\Serializer\StoreItemSerializer;
+use Xypp\Store\Event\ExpireInstantly;
+use Xypp\Store\Listener\ExpireInstantlyListener;
 
 return [
     (new Extend\Frontend('forum'))
@@ -53,5 +55,7 @@ return [
         ->schedule(Console\ExpireScheduleCommand::class, function ($event) {
             $event->everyMinute()->withoutOverlapping();
         }),
+    (new Extend\Event())
+        ->listen(ExpireInstantly::class, ExpireInstantlyListener::class),
     new Extend\Locales(__DIR__ . '/locale'),
 ];

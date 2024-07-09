@@ -2,6 +2,7 @@ xypp-store:
   forum:
     time_segs: "日|时|分"
     store: 商店
+    purchase-history: 已购商品
     create: 创建商品
     purchase: 购买
     edit_button: 编辑
@@ -43,6 +44,7 @@ xypp-store:
       use_cnt: "{0}次可用"
       expire: 有效期{0}
     history:
+      no_record: "无已购项目"
       delete_button: 删除已购项目
       confirm_delete: 确定删除这件你购买的商品吗？
       title: 已购项目
@@ -69,7 +71,7 @@ xypp-store:
         cannot: "无法购买该物品"
         not_enough_money: "货币不足"
   admin:
-    premission:
+    permissions:
       add-item: "添加商品"
       remove-item: "移除商品"
       view-history: "查看他人的已购"

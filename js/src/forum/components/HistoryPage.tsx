@@ -8,6 +8,8 @@ import PurchaseHistory from '../../common/models/PurchaseHistory';
 import PurchaseHistoryComponent from './PurchaseHistoryComponent';
 import Select from 'flarum/common/components/Select';
 import StoreItemUtils from '../utils/StoreItemUtils';
+import Placeholder from 'flarum/common/components/Placeholder';
+import { showIf } from '../utils/NodeUtil';
 export default class HistoryPage extends UserPage {
     loading: boolean = false;
     record: PurchaseHistory[] | null = null;
@@ -26,18 +28,18 @@ export default class HistoryPage extends UserPage {
         return (
             <div className="store-history-page-container">
                 <div class="store-history-page-title">
+                    <h2>{app.translator.trans('xypp-store.forum.purchase-history')}</h2>
                     <Select options={this.filters} value={this.currentFilter} onchange={this.changeFilter.bind(this)}></Select>
+                    <span></span>
                 </div>
 
                 <div className="store-history-page">
-                    {this.loading ? (
-                        <LoadingIndicator display="block" />
-                    ) : (
-                        this.record?.map((item, index) => {
+                    {showIf(this.loading, <LoadingIndicator display="block" />,
+                        showIf(!!(this.record?.length), this.record?.map((item, index) => {
                             return (
                                 <PurchaseHistoryComponent item={item} />
                             );
-                        })
+                        }), <Placeholder text={app.translator.trans("xypp-store.forum.history.no_record")} />)
                     )}
                 </div>
             </div>

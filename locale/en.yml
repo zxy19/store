@@ -2,6 +2,7 @@ xypp-store:
   forum:
     time_segs: "days|hours|minutes"
     store: Store
+    purchase-history: Purchased
     create: Create Item
     purchase: Purchase
     edit_button: Edit
@@ -41,7 +42,9 @@ xypp-store:
       rest_cnt: "{0} left"
       use_cnt: "{0} uses"
       expire: For {0}
+      no_available: "No available item"
     history:
+      no_record: "No purchased"
       delete_button: Delete
       confirm_delete: Sure to delete this item you has bought?
       title: Purchased
@@ -73,7 +76,7 @@ xypp-store:
         cannot: "Can't purchase this Item"
         not_enough_money: "Not enough money"
   admin:
-    premission:
+    permissions:
       add-item: "Add Store Item"
       remove-item: "Remove Store Item"
       view-history: "View other's purchased"

@@ -5,11 +5,13 @@ namespace Xypp\Store\Api\Controller\storeItems;
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
+use Illuminate\Bus\Dispatcher;
 use Middlewares\Utils\HttpErrorException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Tobscure\JsonApi\Document;
 use Illuminate\Support\Arr;
 use Xypp\Store\Context\PurchaseContext;
+use Xypp\Store\Event\PurchaseDone;
 use Xypp\Store\PurchaseHistory;
 use Xypp\Store\StoreItem;
 use Xypp\Store\Helper\StoreHelper;
@@ -19,7 +21,11 @@ class PurchaseStoreItemController extends AbstractCreateController
 {
     public $serializer = \Xypp\Store\Api\Serializer\PurchaseHistorySerializer::class;
     protected StoreHelper $StoreHelper;
-
+    protected Dispatcher $events;
+    public function __construct(Dispatcher $events)
+    {
+        $this->events = $events;
+    }
     protected function data(Request $request, Document $document)
     {
         $actor = RequestUtil::getActor($request);
@@ -78,6 +84,8 @@ class PurchaseStoreItemController extends AbstractCreateController
         if (!$context->noCostMoney)
             $actor->money += $item->price;
 
+
+        $this->events->dispatch(new PurchaseDone($actor, $item, $newModel));
         if ($item->isDirty())
             $item->save();
         if ($actor->isDirty())
