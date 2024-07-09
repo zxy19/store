@@ -25,7 +25,8 @@ class ListHistoryController extends AbstractListController
         if (is_null($id)) {
             $id = $actor->id;
         } else {
-            $actor->assertCan("viewHistory");
+            if ($id != $actor->id)
+                $actor->assertCan("viewHistory");
         }
         $q = PurchaseHistory::where('user_id', $id)->whereIn("provider", StoreHelper::providersShowInHistory());
         if ($type) {
