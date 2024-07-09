@@ -22,8 +22,6 @@ class RemoveStoreItemController extends AbstractDeleteController
         $actor->assertCan("removeStoreItem");
         $id = Arr::get($request->getQueryParams(), 'id');
         $item = StoreItem::findOrFail($id);
-        if (!StoreHelper::applyExpire($item))
-            throw new ValidationException(["msg" => "fail_expire"]);
         $item->delete();
     }
 }
