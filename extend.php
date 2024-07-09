@@ -34,10 +34,10 @@ return [
     (new Extend\Frontend('admin'))
         ->js(__DIR__ . '/js/dist/admin.js'),
     (new Extend\Routes("api"))
-        ->get("/store-item", "store-item.list", ListStoreItemController::class)
-        ->post("/store-item", "store-item.create", AddStoreItemController::class)
-        ->get("/store-item/{id}/delete", "store-item.delete", RemoveStoreItemController::class)
-        ->get("/store-item/{id}/purchase", "store-item.purchase", PurchaseStoreItemController::class)
+        ->get("/xypp-store-item", "store-item.list", ListStoreItemController::class)
+        ->post("/xypp-store-item", "store-item.create", AddStoreItemController::class)
+        ->get("/xypp-store-item/{id}/delete", "store-item.delete", RemoveStoreItemController::class)
+        ->get("/xypp-store-item/{id}/purchase", "store-item.purchase", PurchaseStoreItemController::class)
         ->get("/purchase-history", "purchase-history.list", ListHistoryController::class)
         ->post("/purchase-history/{id}/use", "purchase-history.use", UseHistoryController::class)
         ->get("/purchase-history/{id}/delete", "purchase-history.delete", RemoveHistoryController::class),
