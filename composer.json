@@ -25,11 +25,11 @@
     "extra": {
         "flarum-extension": {
             "title": "Store",
-            "category": "",
+            "category": "feature",
             "icon": {
-                "name": "",
-                "color": "",
-                "backgroundColor": ""
+                "name": "fas fa-store",
+                "color": "#FFFFFF",
+                "backgroundColor": "#f44336"
             }
         },
         "flarum-cli": {

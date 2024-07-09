@@ -10,6 +10,8 @@ At the beginning, the extension is developed for another extension [user-decorat
 
 About how to create a provider, see [xypp-store-template](https://github.com/zxy19/store-template)
 
+This extension requires SCHEDULE. If not configured, the expire will never happens automatically.
+
 ## Installation
 
 Install with composer:

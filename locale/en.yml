@@ -72,4 +72,9 @@ xypp-store:
         not_enough_item: "No enough item"
         cannot: "Can't purchase this Item"
         not_enough_money: "Not enough money"
-    
+  admin:
+    premission:
+      add-item: "Add Store Item"
+      remove-item: "Remove Store Item"
+      view-history: "View other's purchased"
+      remove-history: "Delete other's purchased"

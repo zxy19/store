@@ -68,3 +68,9 @@ xypp-store:
         not_enough_item: "物品数量不足"
         cannot: "无法购买该物品"
         not_enough_money: "货币不足"
+  admin:
+    premission:
+      add-item: "添加商品"
+      remove-item: "移除商品"
+      view-history: "查看他人的已购"
+      remove-history: "移除他人的已购"

@@ -74,7 +74,14 @@ export default class PurchaseHistoryComponent extends Component {
     }
     this.loading = true;
     m.redraw();
-    await StoreItemUtils.getInstance().use((this.attrs as any).item);
+    try {
+      await StoreItemUtils.getInstance().use((this.attrs as any).item);
+    } catch (e: any) {
+      app.alerts.show(Alert, { type: "warn" }, e.message);
+      this.loading = false;
+      m.redraw();
+      return;
+    }
     this.loading = false;
     m.redraw();
     app.alerts.show(Alert, { type: "success" }, app.translator.trans('xypp-store.forum.use_result.success'));

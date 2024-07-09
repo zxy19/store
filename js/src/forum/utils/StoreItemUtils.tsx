@@ -22,7 +22,6 @@ export default class StoreItemUtils {
     const data = await this.getUseData(item);
     this.useWithData(item, data);
   }
-
   public async useWithData(item: PurchaseHistory, data: string) {
     await app.request({
       method: "POST",

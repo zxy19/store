@@ -3,6 +3,7 @@ import PurchaseHistory from "../../common/models/PurchaseHistory";
 import StoreItemUtils from "../utils/StoreItemUtils";
 import QueryModal from "../components/QueryModal";
 
+
 export class UseHelper {
     purchaseHistory: PurchaseHistory[];
 

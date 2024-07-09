@@ -31,9 +31,8 @@ return [
         ->route('/store', 'store.index', function ($document) {
             return $document;
         }),
-    // (new Extend\Frontend('admin'))
-    //     ->js(__DIR__.'/js/dist/admin.js')
-    //     ->css(__DIR__.'/less/admin.less'),
+    (new Extend\Frontend('admin'))
+        ->js(__DIR__ . '/js/dist/admin.js'),
     (new Extend\Routes("api"))
         ->get("/store-item", "store-item.list", ListStoreItemController::class)
         ->post("/store-item", "store-item.create", AddStoreItemController::class)
