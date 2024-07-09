@@ -90,7 +90,7 @@ export default class StoreItemComponent extends Component {
     try {
       await app.request({
         method: 'GET',
-        url: app.forum.attribute('apiUrl') + '/xypp-store-item/' + (this.attrs as any).item.id() + '/purchase',
+        url: app.forum.attribute('apiUrl') + '/store-item/' + (this.attrs as any).item.id() + '/purchase',
       });
       app.alerts.show(Alert, { type: "success" }, app.translator.trans('xypp-store.forum.purchase_result.success'));
       setRouteWithForcedRefresh(app.route("storePage"));

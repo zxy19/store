@@ -52,7 +52,7 @@ export class PurchaseHelper {
         }
         return await app.request({
             method: 'GET',
-            url: app.forum.attribute('apiUrl') + '/xypp-store-item/' + this.storeItem[0].id() + '/purchase',
+            url: app.forum.attribute('apiUrl') + '/store-item/' + this.storeItem[0].id() + '/purchase',
         });
     }
 }

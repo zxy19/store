@@ -29,8 +29,10 @@ class StoreItemSerializer extends AbstractSerializer
         }
 
         // See https://docs.flarum.org/extend/api.html#serializers for more information.
-        if ($model->dataAttrs == null) {
+        try{
             $model->dataAttrs = StoreHelper::getAttrData($model);
+        }catch (\Exception $e){
+            $model->dataAttrs = [];
         }
 
         return [

@@ -34,14 +34,18 @@ class PurchaseHistorySerializer extends AbstractSerializer
                 get_class($this) . ' can only serialize instances of ' . PurchaseHistory::class
             );
         }
-        $model->dataAttrs = StoreHelper::getAttrHistory($model);
+        try {
+            $model->dataAttrs = StoreHelper::getAttrHistory($model);
+        } catch (\Exception $e) {
+            $model->dataAttrs = [];
+        }
 
         return [
             "id" => $model->id,
             "provider" => $model->provider,
             "data" => $model->dataAttrs,
             "use_data" => $model->data,
-            "can_use" => StoreHelper::canUse($model,true),
+            "can_use" => StoreHelper::canUse($model, true),
             "expire_at" => $model->expire_at,
             "rest_cnt" => $model->rest_cnt,
             "valid" => !Arr::get($model->dataAttrs, "_unavailable", false)

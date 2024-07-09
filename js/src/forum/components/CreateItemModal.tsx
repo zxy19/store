@@ -115,7 +115,7 @@ export default class CreateItemModal extends Modal {
     this.loading = true;
     try {
       await app.request({
-        url: app.forum.attribute('apiUrl') + '/xypp-store-item',
+        url: app.forum.attribute('apiUrl') + '/store-item',
         method: 'POST',
         body: {
           attributes: {
@@ -145,7 +145,7 @@ export default class CreateItemModal extends Modal {
     try {
       await app.request({
         method: 'GET',
-        url: app.forum.attribute('apiUrl') + '/xypp-store-item/' + (this.attrs as any).item_id + "/delete",
+        url: app.forum.attribute('apiUrl') + '/store-item/' + (this.attrs as any).item_id + "/delete",
       });
       app.modal.close();
       setRouteWithForcedRefresh(app.route("storePage"));
