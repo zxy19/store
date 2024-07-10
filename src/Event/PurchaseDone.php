@@ -3,7 +3,6 @@
 namespace Xypp\Store\Event;
 
 use Flarum\User\User;
-use Xypp\Store\Context\PurchaseContext;
 use Xypp\Store\PurchaseHistory;
 use Xypp\Store\StoreItem;
 

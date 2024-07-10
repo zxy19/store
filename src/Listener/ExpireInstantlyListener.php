@@ -11,8 +11,13 @@ use Xypp\Store\Helper\StoreHelper;
 
 class ExpireInstantlyListener
 {
+    protected StoreHelper $helper;
+    public function __construct(StoreHelper $helper)
+    {
+        $this->helper = $helper;
+    }
     public function handle(ExpireInstantly $event)
     {
-        StoreHelper::applyExpire($event->item);
+        $this->helper->applyExpire($event->item);
     }
 }

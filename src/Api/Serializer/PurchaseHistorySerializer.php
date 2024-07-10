@@ -16,9 +16,11 @@ class PurchaseHistorySerializer extends AbstractSerializer
      */
     protected $type = 'purchase-history';
     protected StoreItemSerializer $storeItemSerializer;
-    public function __construct(StoreItemSerializer $storeItemSerializer)
+    protected StoreHelper $helper;
+    public function __construct(StoreItemSerializer $storeItemSerializer,StoreHelper $helper)
     {
         $this->storeItemSerializer = $storeItemSerializer;
+        $this->helper = $helper;
     }
 
     /**
@@ -35,7 +37,7 @@ class PurchaseHistorySerializer extends AbstractSerializer
             );
         }
         try {
-            $model->dataAttrs = StoreHelper::getAttrHistory($model);
+            $model->dataAttrs = $this->helper->getAttrHistory($model);
         } catch (\Exception $e) {
             $model->dataAttrs = [];
         }
@@ -45,7 +47,7 @@ class PurchaseHistorySerializer extends AbstractSerializer
             "provider" => $model->provider,
             "data" => $model->dataAttrs,
             "use_data" => $model->data,
-            "can_use" => StoreHelper::canUse($model, true),
+            "can_use" => $this->helper->canUse($model, true),
             "expire_at" => $model->expire_at,
             "rest_cnt" => $model->rest_cnt,
             "valid" => !Arr::get($model->dataAttrs, "_unavailable", false)

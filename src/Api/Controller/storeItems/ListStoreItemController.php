@@ -16,6 +16,11 @@ use Xypp\Store\Helper\StoreHelper;
 class ListStoreItemController extends AbstractListController
 {
     public $serializer = \Xypp\Store\Api\Serializer\StoreItemSerializer::class;
+    protected StoreHelper $helper;
+    public function __construct(StoreHelper $helper)
+    {
+        $this->helper = $helper;
+    }
 
     protected function data(Request $request, Document $document)
     {
@@ -27,7 +32,7 @@ class ListStoreItemController extends AbstractListController
             $result = StoreItem::all();
         }
         foreach ($result as $item) {
-            $r = StoreHelper::isAvailable($actor, $item);
+            $r = $this->helper->isAvailable($actor, $item);
             if ($r === true) {
                 $item->unavailable = false;
             } else {

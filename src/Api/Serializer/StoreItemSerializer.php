@@ -14,6 +14,12 @@ class StoreItemSerializer extends AbstractSerializer
      * {@inheritdoc}
      */
     protected $type = 'store-item';
+    protected StoreHelper $helper;
+    public function __construct(StoreHelper $helper)
+    {
+        $this->helper = $helper;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -30,7 +36,7 @@ class StoreItemSerializer extends AbstractSerializer
 
         // See https://docs.flarum.org/extend/api.html#serializers for more information.
         try{
-            $model->dataAttrs = StoreHelper::getAttrData($model);
+            $model->dataAttrs = $this->helper->getAttrData($model);
         }catch (\Exception $e){
             $model->dataAttrs = [];
         }

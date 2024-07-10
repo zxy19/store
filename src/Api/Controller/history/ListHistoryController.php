@@ -16,10 +16,16 @@ class ListHistoryController extends AbstractListController
 {
     public $include = ['store_item'];
     public $serializer = \Xypp\Store\Api\Serializer\PurchaseHistorySerializer::class;
+    protected StoreHelper $helper;
+    public function __construct(StoreHelper $helper)
+    {
+        $this->helper = $helper;
+    }
 
     protected function data(Request $request, Document $document)
     {
         $actor = RequestUtil::getActor($request);
+        $actor->assertRegistered();
         $type = Arr::get($request->getQueryParams(), "type", "");
         $id = Arr::get($request->getQueryParams(), 'id');
         if (is_null($id)) {
@@ -28,7 +34,7 @@ class ListHistoryController extends AbstractListController
             if ($id != $actor->id)
                 $actor->assertCan("viewHistory");
         }
-        $q = PurchaseHistory::where('user_id', $id)->whereIn("provider", StoreHelper::providersShowInHistory());
+        $q = PurchaseHistory::where('user_id', $id)->whereIn("provider", $this->helper->providersShowInHistory());
         if ($type) {
             $q->where("provider", $type);
         }

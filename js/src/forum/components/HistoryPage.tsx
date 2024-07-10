@@ -28,7 +28,6 @@ export default class HistoryPage extends UserPage {
         return (
             <div className="store-history-page-container">
                 <div class="store-history-page-title">
-                    <h2>{app.translator.trans('xypp-store.forum.purchase-history')}</h2>
                     <Select options={this.filters} value={this.currentFilter} onchange={this.changeFilter.bind(this)}></Select>
                     <span></span>
                 </div>

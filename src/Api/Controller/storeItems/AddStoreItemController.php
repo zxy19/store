@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
+use Flarum\Locale\Translator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Tobscure\JsonApi\Document;
 use Illuminate\Support\Arr;
@@ -16,6 +17,13 @@ use Xypp\Store\Helper\StoreHelper;
 class AddStoreItemController extends AbstractCreateController
 {
     public $serializer = \Xypp\Store\Api\Serializer\StoreItemSerializer::class;
+    protected Translator $translator;
+    protected StoreHelper $helper;
+    public function __construct(Translator $translator, StoreHelper $helper)
+    {
+        $this->translator = $translator;
+        $this->helper = $helper;
+    }
 
     protected function data(Request $request, Document $document)
     {
@@ -26,7 +34,7 @@ class AddStoreItemController extends AbstractCreateController
         if (Arr::get($attributes, 'id')) {
             $model = StoreItem::findOrFail(Arr::get($attributes, 'id'));
             if (!$model instanceof StoreItem) {
-                throw new ValidationException(["error" => "edit.item_not_found"]);
+                $this->helper->exceptionWith("edit-result.fail.not-found");
             }
         } else {
             $model = new StoreItem();
@@ -45,7 +53,7 @@ class AddStoreItemController extends AbstractCreateController
             $model->rest_cnt = null;
         }
         $model->use_cnt = Arr::get($attributes, 'use_cnt');
-        StoreHelper::getAttrData($model);
+        $this->helper->getAttrData($model);
         $model->save();
         return $model;
     }

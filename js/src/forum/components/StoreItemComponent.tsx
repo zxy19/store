@@ -14,9 +14,11 @@ export default class StoreItemComponent extends Component {
   isConfirm: boolean = false;
   view(vnode: any) {
     const item: StoreItem = (this.attrs as any).item;
-    let tipKey = 'xypp-store.forum.purchase';
+    let tipKey: string = 'xypp-store.forum.purchase';
     if (item.unavailable()) {
-      tipKey = 'xypp-store.forum.unavailable.' + item.unavailable();
+      tipKey = (item.unavailable() as string) || "";
+      if (tipKey.split(".").length <= 2)
+        tipKey = 'xypp-store.forum.unavailable.' + tipKey;
     } else if (this.isConfirm) {
       tipKey = 'xypp-store.forum.purchase-confirm';
     }

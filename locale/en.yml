@@ -75,6 +75,9 @@ xypp-store:
         not_enough_item: "No enough item"
         cannot: "Can't purchase this Item"
         not_enough_money: "Not enough money"
+    edit-result:
+      fail:
+        not-found: "Item not found"
   admin:
     permissions:
       add-item: "Add Store Item"

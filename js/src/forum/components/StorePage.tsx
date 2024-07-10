@@ -34,7 +34,6 @@ export default class StorePage extends Page {
             </nav>
             <div class="StoreListPage">
               <div class="store-list-title">
-                <h2>{app.translator.trans('xypp-store.forum.store')}</h2>
                 <Select options={this.filters} value={this.currentFilter} onchange={this.changeFilter.bind(this)}></Select>
                 {!(app.session.user as any)?.canCreateStoreItem() ? (
                   ''

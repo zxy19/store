@@ -5,7 +5,8 @@ namespace Xypp\Store\Api\Controller\storeItems;
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
-use Illuminate\Bus\Dispatcher;
+use Flarum\Locale\Translator;
+use Illuminate\Events\Dispatcher;
 use Middlewares\Utils\HttpErrorException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Tobscure\JsonApi\Document;
@@ -20,24 +21,28 @@ use Carbon\Carbon;
 class PurchaseStoreItemController extends AbstractCreateController
 {
     public $serializer = \Xypp\Store\Api\Serializer\PurchaseHistorySerializer::class;
-    protected StoreHelper $StoreHelper;
+    protected StoreHelper $helper;
     protected Dispatcher $events;
-    public function __construct(Dispatcher $events)
+    protected Translator $translator;
+    public function __construct(Dispatcher $events, Translator $translator, StoreHelper $StoreHelper)
     {
         $this->events = $events;
+        $this->translator = $translator;
+        $this->helper = $StoreHelper;
     }
     protected function data(Request $request, Document $document)
     {
         $actor = RequestUtil::getActor($request);
+        $actor->assertRegistered();
         $id = Arr::get($request->getQueryParams(), 'id');
         $item = StoreItem::findOrFail($id);
 
         if ($actor->money < $item->price) {
-            throw new ValidationException(['msg' => "xypp-store.forum.purchase_result.fail.not_enough_money"]);
+            throw new ValidationException(['error' => $this->translator->trans("xypp-store.forum.purchase_result.fail.not_enough_money")]);
         }
         if (!is_null($item->rest_cnt)) {
             if ($item->rest_cnt <= 0) {
-                throw new ValidationException(['msg' => "xypp-store.forum.purchase_result.fail.not_enough_item"]);
+                throw new ValidationException(['error' => $this->translator->trans("xypp-store.forum.purchase_result.fail.not_enough_item")]);
             }
         }
 
@@ -46,12 +51,12 @@ class PurchaseStoreItemController extends AbstractCreateController
         $item->save();
         $actor->money -= $item->price;
         $actor->save();
-        if (StoreHelper::isSingleHold($item)) {
+        if ($this->helper->isSingleHold($item)) {
             $newModel = PurchaseHistory::where("user_id", $actor->id)->where("item_id", $item->id)->first();
         }
         $context = new PurchaseContext($actor, $item, $newModel);
         try {
-            $data = StoreHelper::applyPurchase($actor, $item, $newModel, $context);
+            $data = $this->helper->applyPurchase($actor, $item, $newModel, $context);
         } catch (\Exception $e) {
             $item->rest_cnt++;
             $item->save();

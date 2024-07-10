@@ -43,6 +43,7 @@ xypp-store:
       rest_cnt: "{0}剩余"
       use_cnt: "{0}次可用"
       expire: 有效期{0}
+      no_available: "没有可用的商品"
     history:
       no_record: "无已购项目"
       delete_button: 删除已购项目
@@ -70,6 +71,9 @@ xypp-store:
         not_enough_item: "物品数量不足"
         cannot: "无法购买该物品"
         not_enough_money: "货币不足"
+    edit-result:
+      fail:
+        not-found: "未找到物品"
   admin:
     permissions:
       add-item: "添加商品"

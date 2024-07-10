@@ -24,7 +24,7 @@ export function addFrontendProviders(
             if (comingProvider === provider) {
                 await getProviderData(this.providerDatas);
             }
-            return await _originFunc();
+            return await _originFunc(comingProvider);
         });
     }
     extend(CreateItemModal.prototype, "oninit", function () {
