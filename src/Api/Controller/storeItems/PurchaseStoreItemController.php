@@ -86,7 +86,7 @@ class PurchaseStoreItemController extends AbstractCreateController
         }
         if ($context->noConsume)
             $item->rest_cnt++;
-        if (!$context->noCostMoney)
+        if ($context->noCostMoney)
             $actor->money += $item->price;
 
 
