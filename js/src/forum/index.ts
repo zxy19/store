@@ -16,7 +16,7 @@ app.initializers.add('xypp/store', () => {
   //@ts-ignore
   User.prototype.canCreateStoreItem = Model.attribute('canCreateStoreItem');
   app.routes['storePage'] = {
-    path: '/store',
+    path: '/store-page',
     component: StorePage,
   };
   app.routes['user.purchase_history'] = {

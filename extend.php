@@ -30,7 +30,8 @@ return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__ . '/js/dist/forum.js')
         ->css(__DIR__ . '/less/forum.less')
-        ->route('/store', 'store.index', function ($document) {
+        // For some other plugin has used /store. To be compatible with it.
+        ->route('/store-page', 'store.index', function ($document) {
             return $document;
         }),
     (new Extend\Frontend('admin'))
