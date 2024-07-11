@@ -33,40 +33,41 @@ export default class StoreItemComponent extends Component {
         </div>
         <div class="store-item-description">{item.desc()}</div>
         <div class="store-item-info">
-          <span className=''>
-            <i className='fas fa-cubes'></i>
-            {showIf(!!(item.rest_cnt() !== null),
-              app.translator.trans('xypp-store.forum.item.rest_cnt', [item.rest_cnt()] as any),
-              app.translator.trans('xypp-store.forum.history.infinit'))}
-          </span>
-          <span className=''>
-            {showIf(!!item.can_use(), [
-              <i className='fas fa-undo-alt'></i>,
-              showIf(!!(item.use_cnt()),
-                app.translator.trans('xypp-store.forum.item.use_cnt', [item.use_cnt()] as any),
-                app.translator.trans('xypp-store.forum.history.infinit'))])
-            }
-          </span>
-          <span>
-            <i className='fas fa-clock'></i>
+          <span className='store-item-time'>
+            <i className='fas fa-clock fas-space-right'></i>
             {showIf(!!(item.expire_time()),
               app.translator.trans('xypp-store.forum.item.expire', [effectLengthFormat(item.expire_time() as number)] as any),
               app.translator.trans('xypp-store.forum.history.forever'))}
           </span>
+          <span className=''>
+            <i className='fas fa-cubes fas-space-right'></i>
+            {showIf(!!(item.rest_cnt() !== null),
+              app.translator.trans('xypp-store.forum.item.rest_cnt', [item.rest_cnt()] as any),
+              app.translator.trans('xypp-store.forum.item.infinity_count'))}
+          </span>
+          <span className=''>
+            {showIf(!!item.can_use(), [
+              <i className='fas fa-undo-alt  fas-space-right'></i>,
+              showIf(!!(item.use_cnt()),
+                app.translator.trans('xypp-store.forum.item.use_cnt', [item.use_cnt()] as any),
+                app.translator.trans('xypp-store.forum.history.infinity_use'))])
+            }
+          </span>
         </div>
         <span className='text-separate store-item-bottom'>
-          <span className='store-item-price'>
-            <i class="fas fa-coins" />
-            {item.price()}
-          </span>
           <Button
             className={item.unavailable() ? 'store-item-button Button' : 'store-item-button Button Button--primary'}
             onclick={this.buy.bind(this)}
             loading={this.loading}
             disabled={this.loading || item.unavailable()}
           >
-            <i class="fas fa-cart-plus" />
+            <i class="fas fa-cart-plus fas-space-right" />
             <span>{app.translator.trans(tipKey)}</span>
+            {" | "}
+            <span className='store-item-price'>
+              <i class="fas fa-coins fas-space-right" />
+              {item.price()}
+            </span>
           </Button>
         </span>
         {

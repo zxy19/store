@@ -6,10 +6,7 @@ export function expireTimeFormat(expire_at: string) {
     if (targ.year() != dayjs().year()) {
         return targ.format('YYYY-MM-DD');
     }
-    if (targ.diff(dayjs(), 'day') > 3) {
-        return targ.format('MM-DD HH');
-    }
-    return targ.format('DD HH:mm');
+    return targ.format('MM-DD HH:mm');
 }
 function padZero(n: number): string {
     if (n < 10) return '0' + n;

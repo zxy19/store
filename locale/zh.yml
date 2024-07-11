@@ -41,21 +41,23 @@ xypp-store:
 
     purchase-confirm: "确定购买吗?"
     item:
-      rest_cnt: "{0}剩余"
-      use_cnt: "{0}次可用"
+      rest_cnt: "库存{0}件"
+      use_cnt: "可使用{0}次"
       expire: 有效期{0}
       no_available: "没有可用的商品"
+      infinity_count: 可以无限购买
     history:
       no_record: "无已购项目"
       delete_button: 删除已购项目
       confirm_delete: 确定删除这件你购买的商品吗？
       title: 已购项目
       use: 使用
-      rest_cnt: "{0}剩余"
-      infinit: 无限
-      expire: 在{0}后超时
+      rest_cnt: "还可以使用{0}次"
+      infinity_use: 可以无限使用
+      expire: 在{0}后过期
       forever: 永久
       confirm_use: "确定使用吗?"
+      unable_to_use: "该物品不可以使用"
     use_result:
       success: "成功"
       fail:
