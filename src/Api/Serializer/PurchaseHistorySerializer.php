@@ -7,7 +7,7 @@ use Illuminate\Support\Arr;
 use Xypp\Store\PurchaseHistory;
 use Xypp\Store\StoreItem;
 use InvalidArgumentException;
-use Xypp\Store\Helper\StoreHelper;
+use Xypp\Store\Helper\ProviderHelper;
 
 class PurchaseHistorySerializer extends AbstractSerializer
 {
@@ -16,8 +16,8 @@ class PurchaseHistorySerializer extends AbstractSerializer
      */
     protected $type = 'purchase-history';
     protected StoreItemSerializer $storeItemSerializer;
-    protected StoreHelper $helper;
-    public function __construct(StoreItemSerializer $storeItemSerializer,StoreHelper $helper)
+    protected ProviderHelper $helper;
+    public function __construct(StoreItemSerializer $storeItemSerializer,ProviderHelper $helper)
     {
         $this->storeItemSerializer = $storeItemSerializer;
         $this->helper = $helper;

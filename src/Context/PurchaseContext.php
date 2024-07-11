@@ -4,6 +4,7 @@ namespace Xypp\Store\Context;
 use Carbon\Carbon;
 use Flarum\Database\Eloquent\Collection;
 use Flarum\User\User;
+use Xypp\Store\Helper\ProviderHelper;
 use Xypp\Store\Helper\StoreHelper;
 use Xypp\Store\PurchaseHistory;
 use Xypp\Store\StoreItem;
@@ -41,16 +42,22 @@ class PurchaseContext
      */
     public $noCostMoney = false;
     /**
-     * Useful functions in the plugin.
+     * Warped operations from providers
+     * @var ProviderHelper
+     */
+    public ProviderHelper $providerHelper;
+    /**
+     * Warped operations from store
      * @var StoreHelper
      */
-    public StoreHelper $helper;
+    public StoreHelper $storeHelper;
     public function __construct(User $actor, StoreItem $item, PurchaseHistory $old = null, StoreHelper $helper)
     {
         $this->actor = $actor;
         $this->item = $item;
         $this->old = $old;
-        $this->helper = $helper;
+        $this->providerHelper = $helper->providerHelper;
+        $this->storeHelper = $helper;
     }
     /**
      * @param Carbon|null $expireAt
@@ -68,6 +75,14 @@ class PurchaseContext
         $this->noConsume = true;
     }
     /**
+     * Extra consume rest count. If rest count is less than cost, will be set to 0.
+     * @param int $cost
+     */
+    public function extraConsume(int $cost)
+    {
+        $this->item->rest_cnt = max($this->item->rest_cnt - $cost, 0);
+    }
+    /**
      * No cost money
      */
     public function noCostMoney()
@@ -80,7 +95,7 @@ class PurchaseContext
      */
     public function getAllHistoryForItem(): Collection
     {
-        return $this->item->history()->get();
+        return $this->item->history()->where('user_id', $this->actor->id)->get();
     }
     /**
      * Send exception to client(Roll back purchase)
@@ -88,6 +103,6 @@ class PurchaseContext
      */
     public function exceptionWith(string $e)
     {
-        $this->helper->exceptionWith($e);
+        $this->providerHelper->exceptionWith($e);
     }
 }

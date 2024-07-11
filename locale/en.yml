@@ -11,6 +11,7 @@ xypp-store:
       all: All
       error:
         title: Unknown provider
+        no-preview: "No preview"
     unavailable:
       common:
         unknown: "Unable to Purchase"

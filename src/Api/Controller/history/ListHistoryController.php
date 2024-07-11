@@ -10,14 +10,14 @@ use Tobscure\JsonApi\Document;
 use Illuminate\Support\Arr;
 use Xypp\Store\PurchaseHistory;
 use Xypp\Store\StoreItem;
-use Xypp\Store\Helper\StoreHelper;
+use Xypp\Store\Helper\ProviderHelper;
 
 class ListHistoryController extends AbstractListController
 {
     public $include = ['store_item'];
     public $serializer = \Xypp\Store\Api\Serializer\PurchaseHistorySerializer::class;
-    protected StoreHelper $helper;
-    public function __construct(StoreHelper $helper)
+    protected ProviderHelper $helper;
+    public function __construct(ProviderHelper $helper)
     {
         $this->helper = $helper;
     }

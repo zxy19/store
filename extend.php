@@ -56,7 +56,5 @@ return [
         ->schedule(Console\ExpireScheduleCommand::class, function ($event) {
             $event->everyMinute()->withoutOverlapping();
         }),
-    (new Extend\Event())
-        ->listen(ExpireInstantly::class, ExpireInstantlyListener::class),
     new Extend\Locales(__DIR__ . '/locale'),
 ];

@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Throwable;
 use Xypp\Store\PurchaseHistory;
-use Xypp\Store\Helper\StoreHelper;
+use Xypp\Store\Helper\ProviderHelper;
 
 class ExpireScheduleCommand extends Command
 {
@@ -19,8 +19,8 @@ class ExpireScheduleCommand extends Command
      * @var string
      */
     protected $description = 'Automatically remove item when expired.';
-    protected StoreHelper $helper;
-    public function __construct(StoreHelper $helper)
+    protected ProviderHelper $helper;
+    public function __construct(ProviderHelper $helper)
     {
         parent::__construct();
         $this->helper = $helper;

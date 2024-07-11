@@ -34,18 +34,21 @@ export default class StoreItemComponent extends Component {
         <div class="store-item-description">{item.desc()}</div>
         <div class="store-item-info">
           <span className=''>
+            <i className='fas fa-cubes'></i>
             {showIf(!!(item.rest_cnt() !== null),
               app.translator.trans('xypp-store.forum.item.rest_cnt', [item.rest_cnt()] as any),
               app.translator.trans('xypp-store.forum.history.infinit'))}
           </span>
           <span className=''>
-            {showIf(!!item.can_use(),
+            {showIf(!!item.can_use(), [
+              <i className='fas fa-undo-alt'></i>,
               showIf(!!(item.use_cnt()),
                 app.translator.trans('xypp-store.forum.item.use_cnt', [item.use_cnt()] as any),
-                app.translator.trans('xypp-store.forum.history.infinit')))
+                app.translator.trans('xypp-store.forum.history.infinit'))])
             }
           </span>
           <span>
+            <i className='fas fa-clock'></i>
             {showIf(!!(item.expire_time()),
               app.translator.trans('xypp-store.forum.item.expire', [effectLengthFormat(item.expire_time() as number)] as any),
               app.translator.trans('xypp-store.forum.history.forever'))}

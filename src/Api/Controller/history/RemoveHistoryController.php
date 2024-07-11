@@ -8,7 +8,7 @@ use Flarum\Http\RequestUtil;
 use Flarum\Locale\Translator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Illuminate\Support\Arr;
-use Xypp\Store\Helper\StoreHelper;
+use Xypp\Store\Helper\ProviderHelper;
 use Xypp\Store\PurchaseHistory;
 
 
@@ -17,8 +17,8 @@ class RemoveHistoryController extends AbstractDeleteController
     public $serializer = \Xypp\Store\Api\Serializer\PurchaseHistorySerializer::class;
 
     protected Translator $translator;
-    protected StoreHelper $helper;
-    public function __construct(Translator $translator, StoreHelper $helper)
+    protected ProviderHelper $helper;
+    public function __construct(Translator $translator, ProviderHelper $helper)
     {
         $this->helper = $helper;
         $this->translator = $translator;

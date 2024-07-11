@@ -3,6 +3,7 @@ namespace Xypp\Store\Context;
 
 use Carbon\Carbon;
 use Flarum\User\User;
+use Xypp\Store\Helper\ProviderHelper;
 use Xypp\Store\Helper\StoreHelper;
 use Xypp\Store\PurchaseHistory;
 use Xypp\Store\StoreItem;
@@ -25,12 +26,17 @@ class UseContext
      * Purchase history object is using.
      * @var PurchaseHistory
      */
-    public PurchaseHistory $history;
+    public PurchaseHistory|null $history = null;
     /**
-     * Useful functions in the plugin.
+     * Warped operations from providers
+     * @var ProviderHelper
+     */
+    public ProviderHelper $providerHelper;
+    /**
+     * Warped operations from store
      * @var StoreHelper
      */
-    public StoreHelper $helper;
+    public ProviderHelper $helper;
     /**
      * Internal
      */
@@ -39,11 +45,16 @@ class UseContext
      * Internal
      */
     public $toRemove = false;
+    /**
+     * Internal
+     */
+    public string $msg = "";
     public function __construct(User $actor, PurchaseHistory $history = null, StoreHelper $helper)
     {
         $this->actor = $actor;
         $this->history = $history;
-        $this->helper = $helper;
+        $this->providerHelper = $helper->providerHelper;
+        $this->storeHelper = $helper;
     }
     /**
      * Get corresponding StoreItem object
@@ -80,10 +91,10 @@ class UseContext
         $this->toRemove = true;
     }
     /**
-     * Extra cost use count
+     * Extra consume use count. If rest count is less than cost, will be set to 0.
      * @param int $cost
      */
-    public function extraCost(int $cost)
+    public function extraConsume(int $cost)
     {
         $this->history->rest_cnt = max($this->history->rest_cnt - $cost, 0);
     }
@@ -95,4 +106,13 @@ class UseContext
     {
         $this->helper->exceptionWith($message);
     }
+    /**
+     * Set msg to reply after use succeed.
+     * @param string $message
+     */
+    public function successMessage(string $message)
+    {
+        $this->msg = $this->helper->trans($message);
+    }
+
 }

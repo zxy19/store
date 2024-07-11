@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Tobscure\JsonApi\Document;
 use Illuminate\Support\Arr;
 use Xypp\Store\StoreItem;
-use Xypp\Store\Helper\StoreHelper;
+use Xypp\Store\Helper\ProviderHelper;
 
 
 class RemoveStoreItemController extends AbstractDeleteController

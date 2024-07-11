@@ -11,15 +11,15 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Tobscure\JsonApi\Document;
 use Illuminate\Support\Arr;
 use Xypp\Store\StoreItem;
-use Xypp\Store\Helper\StoreHelper;
+use Xypp\Store\Helper\ProviderHelper;
 
 
 class AddStoreItemController extends AbstractCreateController
 {
     public $serializer = \Xypp\Store\Api\Serializer\StoreItemSerializer::class;
     protected Translator $translator;
-    protected StoreHelper $helper;
-    public function __construct(Translator $translator, StoreHelper $helper)
+    protected ProviderHelper $helper;
+    public function __construct(Translator $translator, ProviderHelper $helper)
     {
         $this->translator = $translator;
         $this->helper = $helper;

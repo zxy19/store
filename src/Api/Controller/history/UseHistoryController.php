@@ -13,21 +13,18 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Xypp\Store\Context\UseContext;
 use Xypp\Store\Event\UseDone;
-use Xypp\Store\PurchaseHistory;
 use Xypp\Store\Helper\StoreHelper;
+use Xypp\Store\PurchaseHistory;
+use Xypp\Store\Helper\ProviderHelper;
 
 
 class UseHistoryController implements RequestHandlerInterface
 {
 
-    protected Dispatcher $events;
-    protected Translator $translator;
     protected StoreHelper $helper;
-    public function __construct(Dispatcher $events, Translator $translator, StoreHelper $helper)
+    public function __construct(StoreHelper $storeUserHelper)
     {
-        $this->translator = $translator;
-        $this->events = $events;
-        $this->helper = $helper;
+        $this->helper = $storeUserHelper;
     }
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -36,39 +33,10 @@ class UseHistoryController implements RequestHandlerInterface
         if (is_null($id))
             $this->helper->exceptionWith("xypp-store.forum.use_result.fail.id_not_found");
         $item = PurchaseHistory::findOrFail($id);
-        if (!$this->helper->canUse($item))
-            $this->helper->exceptionWith("xypp-store.forum.use_result.fail.cannot");
-        if (!is_null($item->rest_cnt) && $item->rest_cnt <= 0) {
-            $this->helper->exceptionWith("xypp-store.forum.use_result.fail.not_enough");
-        }
         $data = Arr::get($request->getParsedBody(), 'data', "");
-        $item->rest_cnt--;
-        $item->save();
-        $context = new UseContext($actor, $item,$this->helper);
-        if (!$this->helper->useItem($item, $actor, $data, $context)) {
-            $item->rest_cnt++;
-            $item->save();
-            $this->helper->exceptionWith("xypp-store.forum.use_result.fail.error");
-        }
-
-        if ($context->toRemove) {
-            if ($this->helper->applyExpire($item)) {
-                $item->delete();
-            } else {
-                $item->rest_cnt++;
-                $item->save();
-                $this->helper->exceptionWith("xypp-store.forum.use_result.fail.fail_expire");
-            }
-        }
-        if ($context->noConsume)
-            $item->rest_cnt++;
-
-        $this->events->dispatch(new UseDone($actor, $item));
-        if ($item->isDirty()) {
-            $item->save();
-        }
+        $msg = $this->helper->useItem($actor, $item, $data);
         return new JsonResponse([
-            "error" => ""
+            "msg" => $msg
         ]);
     }
 }

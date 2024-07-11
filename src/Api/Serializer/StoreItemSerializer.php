@@ -6,7 +6,7 @@ use Flarum\Api\Serializer\AbstractSerializer;
 use Illuminate\Support\Arr;
 use Xypp\Store\StoreItem;
 use InvalidArgumentException;
-use Xypp\Store\Helper\StoreHelper;
+use Xypp\Store\Helper\ProviderHelper;
 
 class StoreItemSerializer extends AbstractSerializer
 {
@@ -14,8 +14,8 @@ class StoreItemSerializer extends AbstractSerializer
      * {@inheritdoc}
      */
     protected $type = 'store-item';
-    protected StoreHelper $helper;
-    public function __construct(StoreHelper $helper)
+    protected ProviderHelper $helper;
+    public function __construct(ProviderHelper $helper)
     {
         $this->helper = $helper;
     }

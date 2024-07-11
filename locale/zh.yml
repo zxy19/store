@@ -11,6 +11,7 @@ xypp-store:
       all: 所有
       error:
         title: 未知商品提供者
+        no-preview: "没有预览"
     unavailable:
       common:
         unknown: "无法购买此商品"

@@ -29,12 +29,14 @@ export default class PurchaseHistoryComponent extends Component {
         </div>
         <div class="store-item-description">{storeItem.desc()}</div>
         <div class="store-item-info">
-          {showIf(!!item.can_use(), <span className=''>
+
+          {showIf(!!item.can_use(), <span className=''><i className='fas fa-undo-alt'></i>
             {showIf(item.rest_cnt() !== null,
               app.translator.trans('xypp-store.forum.history.rest_cnt', [item.rest_cnt()] as any),
               app.translator.trans('xypp-store.forum.history.infinit'))}
           </span>, <span></span>)}
           <span>
+            <i className='fas fa-clock'></i>
             {showIf(!!(item.expire_at()),
               app.translator.trans('xypp-store.forum.history.expire', [expireTimeFormat(item.expire_at() as string)] as any),
               app.translator.trans('xypp-store.forum.history.forever'))}

@@ -12,11 +12,7 @@ abstract class AbstractStoreProvider
     /**
      * Display in the bag/history.
      */
-    public $canSeeInHistory = false;
-    /**
-     * Whether the item can expire.
-     */
-    public $canExpire = false;
+    public $canSeeInHistory = true;
     /**
      * Whether the item can be used.
      */
@@ -39,10 +35,7 @@ abstract class AbstractStoreProvider
      * @param User $user
      * @return bool
      */
-    public function expire(PurchaseHistory $item): bool
-    {
-        return false;
-    }
+    public abstract function expire(PurchaseHistory $item): bool;
 
     /**
      * Operation of purchase the item.
