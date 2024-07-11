@@ -53,6 +53,9 @@ class AddStoreItemController extends AbstractCreateController
             $model->rest_cnt = null;
         }
         $model->use_cnt = Arr::get($attributes, 'use_cnt');
+        if ($model->use_cnt === "") {
+            $model->use_cnt = null;
+        }
         $this->helper->getAttrData($model);
         $model->save();
         return $model;

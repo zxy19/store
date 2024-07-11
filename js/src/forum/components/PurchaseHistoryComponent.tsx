@@ -76,16 +76,17 @@ export default class PurchaseHistoryComponent extends Component {
     m.redraw();
     try {
       await StoreItemUtils.getInstance().use((this.attrs as any).item);
+      this.loading = false;
+      m.redraw();
+      app.alerts.show(Alert, { type: "success" }, app.translator.trans('xypp-store.forum.use_result.success'));
+      setRouteWithForcedRefresh(app.route('user.purchase_history', { username: (app.current.data as any).user.slug() }));
     } catch (e: any) {
-      app.alerts.show(Alert, { type: "warn" }, e.message);
+      if (e.message)
+        app.alerts.show(Alert, { type: "warn" }, e.message);
       this.loading = false;
       m.redraw();
       return;
     }
-    this.loading = false;
-    m.redraw();
-    app.alerts.show(Alert, { type: "success" }, app.translator.trans('xypp-store.forum.use_result.success'));
-    setRouteWithForcedRefresh(app.route('user.purchase_history', { username: (app.current.data as any).user.slug() }));
   }
   async delete() {
     if (confirm(app.translator.trans('xypp-store.forum.history.confirm_delete') as string)) {

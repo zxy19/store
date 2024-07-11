@@ -44,7 +44,7 @@ class UseHistoryController implements RequestHandlerInterface
         $data = Arr::get($request->getParsedBody(), 'data', "");
         $item->rest_cnt--;
         $item->save();
-        $context = new UseContext($actor, $item);
+        $context = new UseContext($actor, $item,$this->helper);
         if (!$this->helper->useItem($item, $actor, $data, $context)) {
             $item->rest_cnt++;
             $item->save();

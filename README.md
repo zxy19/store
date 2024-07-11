@@ -6,11 +6,13 @@ A [Flarum](http://flarum.org) extension.
 
 This extension provides a store that can be used to purchase item with money of `antoinefr/flarum-ext-money`.
 
-At the beginning, the extension is developed for another extension [user-decoration](https://github.com/zxy19/user-decoration). But it will probably be used for more extensions in the future.
+This extension requires SCHEDULE. If not configured, the expire will never happens automatically.
+
+
+
+## Development
 
 About how to create a provider, see [xypp-store-template](https://github.com/zxy19/store-template)
-
-This extension requires SCHEDULE. If not configured, the expire will never happens automatically.
 
 ## Installation
 

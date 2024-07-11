@@ -20,7 +20,7 @@ export default class StoreItemUtils {
   }
   public async use(item: PurchaseHistory) {
     const data = await this.getUseData(item);
-    this.useWithData(item, data);
+    await this.useWithData(item, data);
   }
   public async useWithData(item: PurchaseHistory, data: string) {
     await app.request({

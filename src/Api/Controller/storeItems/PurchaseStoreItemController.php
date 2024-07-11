@@ -54,7 +54,7 @@ class PurchaseStoreItemController extends AbstractCreateController
         if ($this->helper->isSingleHold($item)) {
             $newModel = PurchaseHistory::where("user_id", $actor->id)->where("item_id", $item->id)->first();
         }
-        $context = new PurchaseContext($actor, $item, $newModel);
+        $context = new PurchaseContext($actor, $item, $newModel,$this->helper);
         try {
             $data = $this->helper->applyPurchase($actor, $item, $newModel, $context);
         } catch (\Exception $e) {

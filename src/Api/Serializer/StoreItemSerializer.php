@@ -51,6 +51,7 @@ class StoreItemSerializer extends AbstractSerializer
             "provider_data" => $model->provider_data,
             "data" => $model->dataAttrs,
             "expire_time" => $model->expire_time,
+            "can_use" => $this->helper->canUse($model,true),
             "rest_cnt" => $model->rest_cnt,
             "use_cnt" => $model->use_cnt,
             "valid" => !Arr::get($model->dataAttrs, "_unavailable", false)
