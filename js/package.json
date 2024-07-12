@@ -24,8 +24,5 @@
         "check-typings": "tsc --noEmit --emitDeclarationOnly false",
         "check-typings-coverage": "typescript-coverage-report"
     },
-    "prettier": "@flarum/prettier-config",
-    "dependencies": {
-        "@types/mithril": "^2.2.7"
-    }
+    "prettier": "@flarum/prettier-config"
 }

@@ -4,7 +4,6 @@ import Button from 'flarum/common/components/Button';
 import Select from 'flarum/common/components/Select';
 import setRouteWithForcedRefresh from 'flarum/common/utils/setRouteWithForcedRefresh';
 import LinkButton from 'flarum/common/components/LinkButton';
-import Switch from 'flarum/common/components/Switch';
 export default class CreateItemModal extends Modal {
   loading = false;
   selectedProvider: string = "unknown";

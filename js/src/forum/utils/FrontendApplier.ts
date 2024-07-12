@@ -3,7 +3,8 @@ import CreateItemModal from "../components/CreateItemModal";
 import StoreItemUtils from "./StoreItemUtils";
 import StoreItem from "../../common/models/StoreItem";
 import PurchaseHistory from "../../common/models/PurchaseHistory";
-
+import type { ComponentTypes } from 'mithril';
+import app from "flarum/forum/app";
 /**
  * implement provider's frontend part.
  * @param provider provider id
@@ -15,14 +16,21 @@ import PurchaseHistory from "../../common/models/PurchaseHistory";
 export function addFrontendProviders(
     provider: string,
     name: string,
-    getProviderData: (providerDatas: { [key: string]: string }) => Promise<void>,
-    getShowCase: (item: StoreItem, purchase_history?: PurchaseHistory) => any,
-    getUseData: (item: PurchaseHistory) => Promise<string>
+    getProviderData?: (providerDatas: { [key: string]: string }) => Promise<void>,
+    getShowCase?: (item: StoreItem, purchase_history?: PurchaseHistory) => ComponentTypes,
+    getUseData?: (item: PurchaseHistory) => Promise<string>
 ): void {
     if (getProviderData) {
         override(CreateItemModal.prototype, "getProviderData", async function (_originFunc: any, comingProvider) {
             if (comingProvider === provider) {
                 await getProviderData(this.providerDatas);
+            }
+            return await _originFunc(comingProvider);
+        });
+    } else {
+        override(CreateItemModal.prototype, "getProviderData", async function (_originFunc: any, comingProvider) {
+            if (comingProvider === provider) {
+                this.providerDatas['default'] = app.translator.trans("xypp-store.forum.create-modal.provider_data_default")
             }
             return await _originFunc(comingProvider);
         });

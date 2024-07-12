@@ -1,5 +1,6 @@
 import StoreItem from "../../common/models/StoreItem";
 import PurchaseHistory from "../../common/models/PurchaseHistory";
+import type { ComponentTypes } from 'mithril';
 /**
  * implement provider's frontend part.
  * @param provider provider id
@@ -8,6 +9,6 @@ import PurchaseHistory from "../../common/models/PurchaseHistory";
  * @param getShowCase Function to create showcase for item box. Return Mithril.VNode/string
  * @param getUseData Function to get data that is filled to use form. Should return SERIALIZED data as string.
  */
-export declare function addFrontendProviders(provider: string, name: string, getProviderData: (providerDatas: {
+export declare function addFrontendProviders(provider: string, name: string, getProviderData?: (providerDatas: {
     [key: string]: string;
-}) => Promise<void>, getShowCase: (item: StoreItem, purchase_history?: PurchaseHistory) => any, getUseData: (item: PurchaseHistory) => Promise<string>): void;
+}) => Promise<void>, getShowCase?: (item: StoreItem, purchase_history?: PurchaseHistory) => ComponentTypes, getUseData?: (item: PurchaseHistory) => Promise<string>): void;
