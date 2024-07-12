@@ -32,7 +32,7 @@ class ListStoreItemController extends AbstractListController
             $result = StoreItem::all();
         }
         foreach ($result as $item) {
-            $r = $this->helper->isAvailable($actor, $item);
+            $r = $this->helper->canPurchase($actor, $item);
             if ($r === true) {
                 $item->unavailable = false;
             } else {

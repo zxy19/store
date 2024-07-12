@@ -12,6 +12,7 @@ class PurchaseHistory extends AbstractModel
     protected $table = 'purchase_history';
     public $valid = true;
     public $dataAttrs = [];
+    public $unavailable = false;
     public function store_item()
     {
         return $this->belongsTo(StoreItem::class, "item_id", "id");

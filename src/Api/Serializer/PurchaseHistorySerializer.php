@@ -47,7 +47,8 @@ class PurchaseHistorySerializer extends AbstractSerializer
             "provider" => $model->provider,
             "data" => $model->dataAttrs,
             "use_data" => $model->data,
-            "can_use" => $this->helper->canUse($model, true),
+            "can_use" => $this->helper->canUseFrontend($model),
+            "unavailable" => $model->unavailable,
             "expire_at" => $model->expire_at,
             "rest_cnt" => $model->rest_cnt,
             "valid" => !Arr::get($model->dataAttrs, "_unavailable", false)

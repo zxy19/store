@@ -14,11 +14,6 @@ abstract class AbstractStoreProvider
      */
     public $canSeeInHistory = true;
     /**
-     * Whether the item can be used.
-     */
-    public $canUse = false;
-
-    /**
      * Whether the item show use button in frontend.
      * It will not effect on box that opened by UseHelper.query()
      * If false, item will be marked as cannot use in frontend.
@@ -76,7 +71,17 @@ abstract class AbstractStoreProvider
     {
         return true;
     }
-
+    /**
+     * Check if the user can use the item.
+     * If cannot use, the method should return string for reason or false for unknown.
+     * @param \Xypp\Store\PurchaseHistory $item
+     * @param \Flarum\User\User $user
+     * @return bool|string
+     */
+    public function canUseItem(PurchaseHistory $item, User $user): bool|string
+    {
+        return true;
+    }
     /**
      * Provide attributes to controller in itemData field.
      * The method will also be called when create the item to validate the provider data is correct.

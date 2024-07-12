@@ -35,9 +35,9 @@ class StoreItemSerializer extends AbstractSerializer
         }
 
         // See https://docs.flarum.org/extend/api.html#serializers for more information.
-        try{
+        try {
             $model->dataAttrs = $this->helper->getAttrData($model);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $model->dataAttrs = [];
         }
 
@@ -51,7 +51,7 @@ class StoreItemSerializer extends AbstractSerializer
             "provider_data" => $model->provider_data,
             "data" => $model->dataAttrs,
             "expire_time" => $model->expire_time,
-            "can_use" => $this->helper->canUse($model,true),
+            "can_use" => $this->helper->canUseFrontend($model),
             "rest_cnt" => $model->rest_cnt,
             "use_cnt" => $model->use_cnt,
             "valid" => !Arr::get($model->dataAttrs, "_unavailable", false)

@@ -12,5 +12,6 @@ export default class PurchaseHistory extends Model {
   store_item = Model.hasOne('store_item');
   provider = Model.attribute('provider');
   can_use = Model.attribute('can_use');
-  rest_cnt = Model.attribute('rest_cnt');  
+  rest_cnt = Model.attribute('rest_cnt');
+  unavailable = Model.attribute('unavailable');
 }

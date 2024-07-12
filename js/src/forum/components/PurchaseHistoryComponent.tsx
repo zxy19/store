@@ -18,6 +18,21 @@ export default class PurchaseHistoryComponent extends Component {
   view(vnode: any) {
     const item: PurchaseHistory = (this.attrs as any).item;
     const storeItem = item.store_item() as StoreItem;
+
+    let button = "primary";
+    let tipKey: string = 'xypp-store.forum.history.use';
+    if (item.unavailable()) {
+      tipKey = (item.unavailable() as string) || "";
+      if (tipKey.split(".").length <= 2)
+        tipKey = 'xypp-store.forum.unavailable.' + tipKey;
+      button = "disabled";
+    } else if (!item.can_use() && !(this.attrs as any).alwaysShowBtn) {
+      tipKey = "xypp-store.forum.history.unable_to_use";
+      button = "disabled";
+    } else if (this.isConfirm) {
+      tipKey = 'xypp-store.forum.history.confirm_use';
+    }
+
     return (
       <div className={"store-item" + (item.valid() ? "" : " invalid")}>
         <h3>{storeItem.name()}</h3>
@@ -42,20 +57,13 @@ export default class PurchaseHistoryComponent extends Component {
           </span>, <span></span>)}
         </div>
         <span className='text-separate store-item-bottom'>
-          {showIf(!!(item.can_use()) || !!((this.attrs as any).alwaysShowBtn),
-            <Button
-              className='store-item-button Button Button--primary'
-              onclick={this.use.bind(this)}
-              loading={this.loading}
-              disabled={this.loading}>
-              {showIf(this.isConfirm, app.translator.trans('xypp-store.forum.history.confirm_use'), app.translator.trans('xypp-store.forum.history.use'))}
-            </Button>
-            , <Button
-              className='store-item-button Button Button--disabled'
-              disabled={true}>
-              {app.translator.trans('xypp-store.forum.history.unable_to_use')}
-            </Button>
-          )}
+          <Button
+            className={'store-item-button Button Button--' + button}
+            onclick={button != "disabled" && this.use.bind(this)}
+            loading={this.loading}
+            disabled={button === "disabled" || this.loading}>
+            {app.translator.trans(tipKey)}
+          </Button>
         </span>
         {// 删除按钮（右上角）
           showIf(!((this.attrs as any).noDelete),

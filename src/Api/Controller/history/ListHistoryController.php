@@ -8,9 +8,10 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Tobscure\JsonApi\Document;
 use Illuminate\Support\Arr;
+use Xypp\Store\Helper\ProviderHelper;
 use Xypp\Store\PurchaseHistory;
 use Xypp\Store\StoreItem;
-use Xypp\Store\Helper\ProviderHelper;
+use Xypp\Store\Helper\StoreHelper;
 
 class ListHistoryController extends AbstractListController
 {
@@ -39,6 +40,16 @@ class ListHistoryController extends AbstractListController
             $q->where("provider", $type);
         }
         $result = $q->get();
+        foreach ($result as $item) {
+            $r = $this->helper->canUse($item, $actor);
+            if ($r === true) {
+                $item->unavailable = false;
+            } else {
+                if (!$r)
+                    $r = "xypp-store.forum.history.unable_to_use";
+                $item->unavailable = $r;
+            }
+        }
         $this->loadRelations($result, $this->include, $request);
         return $result;
     }

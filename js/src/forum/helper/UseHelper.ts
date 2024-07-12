@@ -23,7 +23,7 @@ export class UseHelper {
         return this;
     }
     filterAvailable(): UseHelper {
-        return this.filter(d => { return (d.rest_cnt() as number) > 0 });
+        return this.filter(d => { return (!d.unavailable()) && ((d.rest_cnt() as number) > 0) });
     }
     expireTimeRev(): UseHelper {
         this.purchaseHistory.sort((a, b) => {

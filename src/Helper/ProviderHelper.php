@@ -60,6 +60,9 @@ class ProviderHelper
             return false;
         return isset(self::$extendProvider[$name]);
     }
+
+    //====SERIALIZERS====
+
     /**
      * Get serialized data when purchasing
      * @param \Xypp\Store\StoreItem $item
@@ -83,6 +86,8 @@ class ProviderHelper
         return $this->getProvider($item->provider)->serializeHistory($item);
     }
 
+
+    //======ACTION APPLIERS======
     /**
      * Actions when purchasing item
      * @param mixed $actor
@@ -121,19 +126,97 @@ class ProviderHelper
         return $this->getProvider($item->provider)->expire($item);
     }
     /**
+     * Actions when use item
+     * @param \Xypp\Store\PurchaseHistory $item
+     * @param \Flarum\User\User $actor
+     * @param string $data
+     * @param \Xypp\Store\Context\UseContext $useContext
+     * @return bool
+     */
+    public function applyUse(PurchaseHistory $item, User $actor, string $data, UseContext $useContext): bool
+    {
+        if (!$this->hasProvider($item->provider))
+            return false;
+        return $this->getProvider($item->provider)->useItem($item, $actor, $data, $useContext);
+    }
+
+
+    //====STATUS PREDICATES====
+    /**
      * Check if the item is available to purchase.
+     * If $callOnly, we will direct call the method of provider.
      * @param \Flarum\User\User $actor
      * @param \Xypp\Store\StoreItem $item
+     * @param bool $callOnly
      * @return bool|string
      */
-    public function isAvailable(User $actor, StoreItem $item): bool|string
+    public function canPurchase(User $actor, StoreItem $item, bool $callOnly = false): bool|string
     {
         if (!is_null($item->rest_cnt) && $item->rest_cnt <= 0)
             return "xypp-store.forum.unavailable.common.no_rest";
         if (!$this->hasProvider($item->provider))
             return "xypp-store.forum.unavailable.common.unknown";
+        if (!$callOnly) {
+            if ($actor->money < $item->price) {
+                return "xypp-store.forum.purchase_result.fail.not_enough_money";
+            }
+            if (!is_null($item->rest_cnt)) {
+                if ($item->rest_cnt <= 0) {
+                    return "xypp-store.forum.purchase_result.fail.not_enough_item";
+                }
+            }
+        }
         return $this->getProvider($item->provider)->canPurchase($item, $actor);
     }
+    /**
+     * Check if the item can be used.
+     * If not, return string of reason or false.
+     * If $callOnly, we will direct call the method of provider.
+     * @param \Xypp\Store\PurchaseHistory $item
+     * @param \Flarum\User\User $actor
+     * @param bool $callOnly
+     * @return bool|string
+     */
+    public function canUse(PurchaseHistory $item, User $actor, bool $callOnly = false): bool|string
+    {
+        if (!$this->hasProvider($item->provider))
+            return false;
+        if (!$callOnly) {
+            if (!is_null($item->rest_cnt) && $item->rest_cnt <= 0) {
+                return "xypp-store.forum.use_result.fail.not_enough";
+            }
+            if (!is_null($item->expire_at) && $item->expire_at->isPast()) {
+                return "xypp-store.forum.use_result.fail.expired";
+            }
+        }
+        return $this->getProvider($item->provider)->canUseItem($item, $actor);
+    }
+    /**
+     * Check if the item can be used. It will decide if the item is shown can be used in frontend.
+     * @param \Xypp\Store\PurchaseHistory|\Xypp\Store\StoreItem $item
+     * @param bool $fe
+     * @return bool
+     */
+    public function canUseFrontend(PurchaseHistory|StoreItem $item): bool
+    {
+        if (!$this->hasProvider($item->provider))
+            return false;
+        return $this->getProvider($item->provider)->canUseFrontend;
+    }
+    /**
+     * Check if the item can be take only one.
+     * @param \Xypp\Store\StoreItem $item
+     * @return bool
+     */
+    public function isSingleHold(StoreItem $item): bool
+    {
+        if (!$this->hasProvider($item->provider))
+            return false;
+        return $this->getProvider($item->provider)->singleHold;
+    }
+
+
+    //===MISC=====
     /**
      * Get all providers that should be shown in history page
      * @return array
@@ -148,48 +231,6 @@ class ProviderHelper
         }
         return $ret;
     }
-
-    /**
-     * Check if the item can be take only one.
-     * @param \Xypp\Store\StoreItem $item
-     * @return bool
-     */
-    public function isSingleHold(StoreItem $item): bool
-    {
-        if (!$this->hasProvider($item->provider))
-            return false;
-        return $this->getProvider($item->provider)->singleHold;
-    }
-
-    /**
-     * Check if the item can be used. When $fe is true, it will decide if the item is shown can be used in frontend.
-     * @param \Xypp\Store\PurchaseHistory|\Xypp\Store\StoreItem $item
-     * @param bool $fe
-     * @return bool
-     */
-    public function canUse(PurchaseHistory|StoreItem $item, bool $fe = false): bool
-    {
-        if (!$this->hasProvider($item->provider))
-            return false;
-        if ($fe && !$this->getProvider($item->provider)->canUseFrontend)
-            return false;
-        return $this->getProvider($item->provider)->canUse;
-    }
-    /**
-     * Actions when use item
-     * @param \Xypp\Store\PurchaseHistory $item
-     * @param \Flarum\User\User $actor
-     * @param string $data
-     * @param \Xypp\Store\Context\UseContext $useContext
-     * @return bool
-     */
-    public function useItem(PurchaseHistory $item, User $actor, string $data, UseContext $useContext): bool
-    {
-        if (!$this->hasProvider($item->provider))
-            return false;
-        return $this->getProvider($item->provider)->useItem($item, $actor, $data, $useContext);
-    }
-
     /**
      * End the process with ValidationException with message translated.
      * @param string $e

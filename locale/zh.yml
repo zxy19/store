@@ -67,6 +67,7 @@ xypp-store:
         cannot: "无法使用该物品"
         fail_expire: "尝试过期物品时发生错误"
         id_not_found: "物品ID未找到"
+        expired: "物品已过期"
     purchase_result:
       success: "成功"
       fail:

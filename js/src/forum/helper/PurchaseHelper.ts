@@ -21,7 +21,7 @@ export class PurchaseHelper {
         return this;
     }
     filterAvailable(): PurchaseHelper {
-        return this.filter(d => { return (d.rest_cnt() as number) > 0 });
+        return this.filter(d => { return (!d.unavailable()) && (d.rest_cnt() as number) > 0 });
     }
     sort(predicate: (a: StoreItem, b: StoreItem) => number): PurchaseHelper {
         this.storeItem.sort(predicate);

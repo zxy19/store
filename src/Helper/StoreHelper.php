@@ -50,13 +50,11 @@ class StoreHelper
     public function userPurchase(User $actor, StoreItem $item, callable|null $additionCallback = null, bool $noValidCheck = false): PurchaseHistory
     {
         if (!$noValidCheck) {
-            if ($actor->money < $item->price) {
-                $this->providerHelper->exceptionWith("xypp-store.forum.purchase_result.fail.not_enough_money");
-            }
-            if (!is_null($item->rest_cnt)) {
-                if ($item->rest_cnt <= 0) {
-                    $this->providerHelper->exceptionWith("xypp-store.forum.purchase_result.fail.not_enough_item");
-                }
+            $available = $this->providerHelper->canPurchase($actor, $item);
+            if ($available !== true) {
+                if ($available === false)
+                    $available = "xypp-store.forum.purchase_result.fail.cannot";
+                $this->providerHelper->exceptionWith($available);
             }
         }
 
@@ -131,10 +129,11 @@ class StoreHelper
     public function useItem(User $actor, PurchaseHistory $item, string $data, callable $additionCallback = null, bool $noValidCheck = false): string
     {
         if (!$noValidCheck) {
-            if (!$this->providerHelper->canUse($item))
-                $this->providerHelper->exceptionWith("xypp-store.forum.use_result.fail.cannot");
-            if (!is_null($item->rest_cnt) && $item->rest_cnt <= 0) {
-                $this->providerHelper->exceptionWith("xypp-store.forum.use_result.fail.not_enough");
+            $canUseItem = $this->providerHelper->canUse($item, $actor);
+            if ($canUseItem !== true) {
+                if ($canUseItem === false)
+                    $canUseItem = "xypp-store.forum.use_result.fail.cannot";
+                $this->providerHelper->exceptionWith($canUseItem);
             }
         }
 
@@ -142,7 +141,7 @@ class StoreHelper
         $item->save();
         $context = new UseContext($actor, $item, $this);
         try {
-            if (!$this->providerHelper->useItem($item, $actor, $data, $context)) {
+            if (!$this->providerHelper->applyUse($item, $actor, $data, $context)) {
                 $this->providerHelper->exceptionWith("xypp-store.forum.use_result.fail.error");
             }
             if ($additionCallback)

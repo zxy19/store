@@ -71,6 +71,7 @@ xypp-store:
         cannot: "Can't use this Item"
         fail_expire: "Fail when try to expire this Item"
         id_not_found: "Item ID not found"
+        expired: "Item expired"
     purchase_result:
       success: "Success"
       fail:
