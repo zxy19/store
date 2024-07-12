@@ -33,10 +33,10 @@ class StoreItemProvider implements ExtenderInterface
      * @param callable $purchase
      * @param callable|null $use
      * @param callable|null $expire
-     * @return void
      */
-    public function simple(callable $purchase, callable|null $use = null, callable|null $expire = null)
+    public function simple(string $id, callable $purchase, callable|null $use = null, callable|null $expire = null)
     {
-        $this->extendSimpleProviders[] = new WarpStoreProvider($purchase, $use, $expire);
+        $this->extendSimpleProviders[] = new WarpStoreProvider($id, $purchase, $use, $expire);
+        return $this;
     }
 }

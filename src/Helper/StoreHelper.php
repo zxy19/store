@@ -64,6 +64,7 @@ class StoreHelper
         $item->save();
         $actor->money -= $item->price;
         $actor->save();
+        $newModel=null;
         if ($this->providerHelper->isSingleHold($item)) {
             $newModel = PurchaseHistory::where("user_id", $actor->id)->where("item_id", $item->id)->first();
         }
@@ -114,7 +115,8 @@ class StoreHelper
         if ($actor->isDirty())
             $actor->save();
         $newModel->provider = $item->provider;
-        $newModel->save();
+        if (!$context->noToSave)
+            $newModel->save();
         return $newModel;
     }
 

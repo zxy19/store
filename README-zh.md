@@ -14,6 +14,8 @@ A [Flarum](http://flarum.org) extension.
 
 该拓展要求使用 [scheduler](https://docs.flarum.org/scheduler)。如果未配置，限时商品的过期将不会自动发生。
 
+关于使用说明，详见 [Wiki](https://github.com/zxy19/store-template/wiki/zh-home)
+
 ## Development
 
 该拓展提供了一种简单方式来创建用户可以选择的物品。它也可以用于任何需要使用货币来使用物品的情况。

@@ -42,6 +42,10 @@ class PurchaseContext
      */
     public $noCostMoney = false;
     /**
+     * Internal
+     */
+    public $noToSave = false;
+    /**
      * Warped operations from providers
      * @var ProviderHelper
      */
@@ -88,6 +92,13 @@ class PurchaseContext
     public function noCostMoney()
     {
         $this->noCostMoney = true;
+    }
+    /**
+     * No save. This purchase will not save purchaseHistory to database.
+     */
+    public function noSave()
+    {
+        $this->noToSave = true;
     }
     /**
      * Get all history object that current user has.

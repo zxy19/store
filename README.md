@@ -12,6 +12,8 @@ This extension provides a store that can be used to purchase item with money of 
 
 This extension requires [SCHEDULE](). If not configured, the expire will never happens automatically.
 
+More details, see [Wiki](https://github.com/zxy19/store-template/wiki/zh)
+
 ## Development
 
 This extension provides a simple way to create an item for user to select. It can also used to any case when need to create an item using with money.

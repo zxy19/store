@@ -11,7 +11,7 @@ use Xypp\Store\AbstractStoreProvider;
 class WarpStoreProvider extends AbstractStoreProvider
 {
     public $name;
-    public $canSeeInHistory = false;
+    public $canSeeInHistory = true;
     public $canUse = true;
     public $canUseFrontend = true;
     public $singleHold = false;
@@ -19,12 +19,13 @@ class WarpStoreProvider extends AbstractStoreProvider
     protected $onUse;
     protected $onPurchase;
 
-    public function __construct(callable $purchase, callable|null $use = null, callable|null $onExpire = null)
+    public function __construct(string $id, callable $purchase, callable|null $use = null, callable|null $onExpire = null)
     {
+        $this->name = $id;
         $this->onPurchase = $purchase;
         $this->onUse = $use;
         if (!$use) {
-            $this->canUse = false;
+            $this->canUseFrontend = false;
         }
         $this->onExpire = $onExpire;
     }
@@ -71,7 +72,13 @@ class WarpStoreProvider extends AbstractStoreProvider
     {
         return true;
     }
-
+    public function canUse(PurchaseHistory $item, User $user): bool|string
+    {
+        if ($this->onUse) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * @inheritDoc
