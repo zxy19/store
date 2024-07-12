@@ -2,6 +2,7 @@
 
 namespace Xypp\Store\Helper;
 
+use AntoineFr\Money\Event\MoneyUpdated;
 use Carbon\Carbon;
 use Flarum\Database\Eloquent\Collection;
 use Flarum\User\User;
@@ -36,7 +37,6 @@ class StoreHelper
     {
         $this->providerHelper->exceptionWith($msg);
     }
-
     /**
      * The logic of purchasing
      * The $additionalData is called after the original purchase function is called and has arguments same as the original function.
@@ -57,6 +57,7 @@ class StoreHelper
                 $this->providerHelper->exceptionWith($available);
             }
         }
+        $originalMoney = $actor->money;
 
         // 已经完成判断初步的购买条件。模拟用户已经完成购买，扣款并扣库存
         $item->rest_cnt--;
@@ -106,6 +107,8 @@ class StoreHelper
 
 
         $this->events->dispatch(new PurchaseDone($actor, $item, $newModel));
+        if ($actor->money != $originalMoney)
+            $this->events->dispatch(new MoneyUpdated($actor));
         if ($item->isDirty())
             $item->save();
         if ($actor->isDirty())
@@ -136,7 +139,6 @@ class StoreHelper
                 $this->providerHelper->exceptionWith($canUseItem);
             }
         }
-
         $item->rest_cnt--;
         $item->save();
         $context = new UseContext($actor, $item, $this);
@@ -175,7 +177,6 @@ class StoreHelper
         }
         return $context->msg;
     }
-
     /**
      * Instantly expire and remove a history. If expire operation is not successfully completed, return false
      * @param \Xypp\Store\PurchaseHistory $item

@@ -36,7 +36,7 @@ class UseContext
      * Warped operations from store
      * @var StoreHelper
      */
-    public ProviderHelper $helper;
+    public StoreHelper $storeHelper;
     /**
      * Internal
      */
@@ -91,20 +91,12 @@ class UseContext
         $this->toRemove = true;
     }
     /**
-     * Extra consume use count. If rest count is less than cost, will be set to 0.
-     * @param int $cost
-     */
-    public function extraConsume(int $cost)
-    {
-        $this->history->rest_cnt = max($this->history->rest_cnt - $cost, 0);
-    }
-    /**
      * Return exception to client(Roll back using)
      * @param string $message
      */
     public function exceptionWith(string $message)
     {
-        $this->helper->exceptionWith($message);
+        $this->storeHelper->exceptionWith($message);
     }
     /**
      * Set msg to reply after use succeed.
@@ -112,7 +104,7 @@ class UseContext
      */
     public function successMessage(string $message)
     {
-        $this->msg = $this->helper->trans($message);
+        $this->msg = $this->providerHelper->trans($message);
     }
 
 }

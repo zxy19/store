@@ -18,7 +18,7 @@ abstract class AbstractStoreProvider
      * It will not effect on box that opened by UseHelper.query()
      * If false, item will be marked as cannot use in frontend.
      */
-    public $canUseFrontend = true;
+    public $canUseFrontend = false;
     /**
      * Whether the user can hold multiple items.
      * If true, when purchase the item, expire time will culminate.
