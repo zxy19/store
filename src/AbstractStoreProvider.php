@@ -28,7 +28,7 @@ abstract class AbstractStoreProvider
     /**
      * Operation of expires the item.
      * @param PurchaseHistory $item
-     * @param User $user
+     * @param ExpireContext $context
      * @return bool
      */
     public abstract function expire(PurchaseHistory $item, ExpireContext $context): bool;
@@ -47,6 +47,8 @@ abstract class AbstractStoreProvider
      * @example return false;
      * @param StoreItem $item
      * @param User $user
+     * @param PurchaseHistory|null $old
+     * @param PurchaseContext $context
      * @return array|bool|string
      */
     public abstract function purchase(StoreItem $item, User $user, PurchaseHistory|null $old = null, PurchaseContext $context): array|bool|string;
@@ -55,6 +57,7 @@ abstract class AbstractStoreProvider
      * Operation of use the item.
      * @param PurchaseHistory $item
      * @param User $user
+     * @param UseContext $context
      * @return bool
      */
     public function useItem(PurchaseHistory $item, User $user, string $data, UseContext $context): bool
@@ -88,7 +91,6 @@ abstract class AbstractStoreProvider
      * The method will also be called when create the item to validate the provider data is correct.
      * **if item is no longer available, add "_unavailable"=>true to the return data;**
      * @param StoreItem $item
-     * @param User $user
      * @return array
      */
     public function serialize(StoreItem $item): array
@@ -101,7 +103,6 @@ abstract class AbstractStoreProvider
      * These data may used to create HistoryBox on frontend
      * **if item is no longer available, add "_unavailable"=>true to the return data;**
      * @param PurchaseHistory $item
-     * @param User $user
      * @return array
      */
     public function serializeHistory(PurchaseHistory $item): array
