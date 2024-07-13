@@ -6,6 +6,7 @@ use Flarum\Foundation\ValidationException;
 use Flarum\Locale\Translator;
 use Flarum\User\User;
 use Xypp\Store\AbstractStoreProvider;
+use Xypp\Store\Context\ExpireContext;
 use Xypp\Store\Context\PurchaseContext;
 use Xypp\Store\Context\UseContext;
 use Xypp\Store\PurchaseHistory;
@@ -123,6 +124,7 @@ class ProviderHelper
      */
     public function applyExpire(PurchaseHistory $item)
     {
+        $context = new ExpireContext($item,$this);
         return $this->getProvider($item->provider)->expire($item);
     }
     /**

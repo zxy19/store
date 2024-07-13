@@ -3,6 +3,7 @@
 namespace Xypp\Store;
 
 use Flarum\User\User;
+use Xypp\Store\Context\ExpireContext;
 use Xypp\Store\Context\PurchaseContext;
 use Xypp\Store\Context\UseContext;
 
@@ -30,7 +31,7 @@ abstract class AbstractStoreProvider
      * @param User $user
      * @return bool
      */
-    public abstract function expire(PurchaseHistory $item): bool;
+    public abstract function expire(PurchaseHistory $item, ExpireContext $context): bool;
 
     /**
      * Operation of purchase the item.

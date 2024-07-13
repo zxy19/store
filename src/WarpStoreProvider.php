@@ -4,6 +4,7 @@ namespace Xypp\Store;
 
 use Flarum\Foundation\ContainerUtil;
 use Flarum\User\User;
+use Xypp\Store\Context\ExpireContext;
 use Xypp\Store\Context\PurchaseContext;
 use Xypp\Store\Context\UseContext;
 use Xypp\Store\AbstractStoreProvider;
@@ -37,10 +38,10 @@ class WarpStoreProvider extends AbstractStoreProvider
         $this->onExpire = ContainerUtil::wrapCallback($this->onExpire, $container);
     }
 
-    public function expire(PurchaseHistory $item): bool
+    public function expire(PurchaseHistory $item, ExpireContext $context): bool
     {
         if ($this->onExpire) {
-            return call_user_func($this->onExpire, $item);
+            return call_user_func($this->onExpire, $item, $context);
         }
         return true;
     }

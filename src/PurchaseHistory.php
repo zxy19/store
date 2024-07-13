@@ -13,6 +13,10 @@ class PurchaseHistory extends AbstractModel
     public $valid = true;
     public $dataAttrs = [];
     public $unavailable = false;
+    public function user()
+    {
+        return $this->belongsTo(\Flarum\User\User::class, "user_id", "id");
+    }
     public function store_item()
     {
         return $this->belongsTo(StoreItem::class, "item_id", "id");

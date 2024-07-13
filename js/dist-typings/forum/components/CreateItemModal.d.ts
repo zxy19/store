@@ -5,8 +5,10 @@ export default class CreateItemModal extends Modal {
     loading: boolean;
     selectedProvider: string;
     selectedData: string;
+    selectedSpecialData: string;
     providers: Record<string, any>;
     providerDatas: Record<string, any>;
+    specialDatas: Record<string, () => Promise<string>>;
     className(): string;
     title(): import("@askvortsov/rich-icu-message-formatter").NestedStringArray;
     onupdate(vnode: any): void;
@@ -17,4 +19,5 @@ export default class CreateItemModal extends Modal {
     getProviderData(e: string): Promise<void>;
     changeProvider(e: string): void;
     changeProviderData(e: string): void;
+    changeSpecialData(e: string): void;
 }

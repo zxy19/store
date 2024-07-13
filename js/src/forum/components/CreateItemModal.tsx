@@ -8,12 +8,14 @@ export default class CreateItemModal extends Modal {
   loading = false;
   selectedProvider: string = "unknown";
   selectedData: string = "unknown"
+  selectedSpecialData: string = "";
   providers: Record<string, any> = {
     unknown: app.translator.trans("xypp-store.forum.create-modal.providers.unknown")
   };
   providerDatas: Record<string, any> = {
     unknown: app.translator.trans("xypp-store.forum.create-modal.providers.unknown_data")
   }
+  specialDatas: Record<string, () => Promise<string>> = {};
   className() {
     return 'Modal--small';
   }
@@ -83,6 +85,7 @@ export default class CreateItemModal extends Modal {
           <div className="Form-group">
             <label for="xypp-store-create-ipt-provider_data">{app.translator.trans('xypp-store.forum.create-modal.provider_data')}</label>
             <Select id="xypp-store-create-selector-provider_data" value={this.selectedData} options={this.providerDatas} onchange={this.changeProviderData.bind(this)}></Select>
+            <div id="xypp-store-create-selector-provider_special"></div>
           </div>
           <div className="Form-group">
             <Button class="Button Button--primary" type="submit" loading={this.loading}>
@@ -111,6 +114,14 @@ export default class CreateItemModal extends Modal {
         return;
       }
     }
+    let providerData = this.selectedData;
+    if (this.specialDatas[this.selectedData]) {
+      if (this.selectedSpecialData) {
+        providerData = this.selectedSpecialData;
+      } else {
+        app.alerts.show({ type: 'error' }, app.translator.trans('xypp-store.forum.create-modal.provider_data_error'));
+      }
+    }
     this.loading = true;
     try {
       await app.request({
@@ -123,7 +134,7 @@ export default class CreateItemModal extends Modal {
             desc: this.$('#xypp-store-create-ipt-desc').val(),
             price: this.$('#xypp-store-create-ipt-price').val(),
             provider: this.selectedProvider,
-            provider_data: this.selectedData,
+            provider_data: providerData,
             rest_cnt: this.$('#xypp-store-create-ipt-rest_cnt').val(),
             expire_time: this.$('#xypp-store-create-ipt-expire_time').val(),
             use_cnt: this.$('#xypp-store-create-ipt-use_cnt').val(),
@@ -175,11 +186,21 @@ export default class CreateItemModal extends Modal {
     this.getProviderData(e);
   }
   changeProviderData(e: string) {
+    if (this.specialDatas[e]) {
+      this.specialDatas[e]().then(this.changeSpecialData.bind(this));
+    } else {
+      this.selectedSpecialData = "";
+    }
     this.selectedData = e;
     if (e == "unknown" || e.startsWith("to_select_")) {
       return;
     }
     this.$('#xypp-store-create-ipt-provider_data').val(e);
+    m.redraw();
+  }
+  changeSpecialData(e: string) {
+    this.$("#xypp-store-create-selector-provider_special").text(e);
+    this.selectedSpecialData = e;
     m.redraw();
   }
 }

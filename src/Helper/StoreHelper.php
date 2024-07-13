@@ -33,6 +33,14 @@ class StoreHelper
     {
         return $item->history()->where("user_id", $actor->id)->get();
     }
+    public function getItem(PurchaseHistory $history): StoreItem|null
+    {
+        return $history->store_item()->get()->first();
+    }
+    public function getUser(PurchaseHistory $history): User|null
+    {
+        return $history->user()->get()->first();
+    }
     public function exceptionWith($msg): void
     {
         $this->providerHelper->exceptionWith($msg);
@@ -64,7 +72,7 @@ class StoreHelper
         $item->save();
         $actor->money -= $item->price;
         $actor->save();
-        $newModel=null;
+        $newModel = null;
         if ($this->providerHelper->isSingleHold($item)) {
             $newModel = PurchaseHistory::where("user_id", $actor->id)->where("item_id", $item->id)->first();
         }
