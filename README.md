@@ -10,7 +10,9 @@ A [Flarum](http://flarum.org) extension.
 
 This extension provides a store that can be used to purchase item with money of `antoinefr/flarum-ext-money`.
 
-This extension requires [SCHEDULE](). If not configured, the expire will never happens automatically.
+**This extension requires PHP8 or above!**
+
+This extension requires [scheduler](https://docs.flarum.org/scheduler). If not configured, the expire will never happens automatically.
 
 More details, see [Wiki](https://github.com/zxy19/store-template/wiki/zh)
 

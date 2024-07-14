@@ -12,6 +12,8 @@ A [Flarum](http://flarum.org) extension.
 
 该拓展提供了一个商店，用户可以在其中使用 `antoinefr/flarum-ext-money` 中的货币来购买物品。
 
+**此拓展要求使用 PHP8 或更高版本**
+
 该拓展要求使用 [scheduler](https://docs.flarum.org/scheduler)。如果未配置，限时商品的过期将不会自动发生。
 
 关于使用说明，详见 [Wiki](https://github.com/zxy19/store-template/wiki/zh-home)
