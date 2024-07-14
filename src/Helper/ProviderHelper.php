@@ -125,7 +125,7 @@ class ProviderHelper
     public function applyExpire(PurchaseHistory $item)
     {
         $context = new ExpireContext($item,$this);
-        return $this->getProvider($item->provider)->expire($item);
+        return $this->getProvider($item->provider)->expire($item,$context);
     }
     /**
      * Actions when use item
