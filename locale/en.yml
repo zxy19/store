@@ -32,6 +32,7 @@ xypp-store:
       edit-button: Edit
       button: Create
       success: Item created
+      confirm_delete: "Sure to delete this item?"
       delete-button: Delete
       providers:
         unknown: "Select Provider"
@@ -46,6 +47,7 @@ xypp-store:
       expire: Duration for {0}
       no_available: "No available item"
       infinity_count: "Unlimited available"
+      not_found: "Item not found"
     history:
       no_record: "No purchased"
       delete_button: Delete
@@ -58,6 +60,7 @@ xypp-store:
       forever: Available forever
       confirm_use: "Confirm to use?"
       unable_to_use: "This item can't be used"
+      not_found: "Item not found"
     query-modal:
       purchase:
         title: "Purchase Item"

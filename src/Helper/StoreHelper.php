@@ -53,9 +53,10 @@ class StoreHelper
      * @param \Xypp\Store\StoreItem $item
      * @param callable|null $additionCallback
      * @param bool $noValidCheck
+     * @param bool $noUseLock
      * @return \Xypp\Store\PurchaseHistory
      */
-    public function userPurchase(User $actor, StoreItem $item, callable|null $additionCallback = null, bool $noValidCheck = false): PurchaseHistory
+    public function userPurchase(User $actor, StoreItem $item, callable|null $additionCallback = null, bool $noValidCheck = false, bool $noUseLock = false): PurchaseHistory
     {
         if (!$noValidCheck) {
             $available = $this->providerHelper->canPurchase($actor, $item);
@@ -66,12 +67,11 @@ class StoreHelper
             }
         }
         $originalMoney = $actor->money;
+        if (!$noUseLock) {
+            $actor = $actor->lockForUpdate()->find($actor->id);
+            $item = $item->lockForUpdate()->find($item->id);
+        }
 
-        // 已经完成判断初步的购买条件。模拟用户已经完成购买，扣款并扣库存
-        $item->rest_cnt--;
-        $item->save();
-        $actor->money -= $item->price;
-        $actor->save();
         $newModel = null;
         if ($this->providerHelper->isSingleHold($item)) {
             $newModel = PurchaseHistory::where("user_id", $actor->id)->where("item_id", $item->id)->first();
@@ -83,10 +83,6 @@ class StoreHelper
                 call_user_func_array($additionCallback, [$$actor, $item, $newModel, $context]);
 
         } catch (\Exception $e) {
-            $item->rest_cnt++;
-            $item->save();
-            $actor->money += $item->price;
-            $actor->save();
             throw $e;
         }
         if (!$newModel) {
@@ -109,10 +105,10 @@ class StoreHelper
         if ($context->replaceExpire !== false) {
             $newModel->expire_at = $context->replaceExpire;
         }
-        if ($context->noConsume)
-            $item->rest_cnt++;
-        if ($context->noCostMoney)
-            $actor->money += $item->price;
+        if (!$context->noConsume)
+            $item->rest_cnt--;
+        if (!$context->noCostMoney)
+            $actor->money -= $item->price;
 
 
         $this->events->dispatch(new PurchaseDone($actor, $item, $newModel));
@@ -137,9 +133,10 @@ class StoreHelper
      * @param string $data
      * @param callable $additionCallback
      * @param bool $noValidCheck
+     * @param bool $noUseLock
      * @return string
      */
-    public function useItem(User $actor, PurchaseHistory $item, string $data, callable $additionCallback = null, bool $noValidCheck = false): string
+    public function useItem(User $actor, PurchaseHistory $item, string $data, callable $additionCallback = null, bool $noValidCheck = false, bool $noUseLock = false): string
     {
         if (!$noValidCheck) {
             $canUseItem = $this->providerHelper->canUse($item, $actor);
@@ -149,8 +146,10 @@ class StoreHelper
                 $this->providerHelper->exceptionWith($canUseItem);
             }
         }
-        $item->rest_cnt--;
-        $item->save();
+        if (!$noUseLock) {
+            $actor = $actor->lockForUpdate()->find($actor->id);
+            $item = $item->lockForUpdate()->find($item->id);
+        }
         $context = new UseContext($actor, $item, $this);
         try {
             if (!$this->providerHelper->applyUse($item, $actor, $data, $context)) {
@@ -159,13 +158,11 @@ class StoreHelper
             if ($additionCallback)
                 call_user_func_array($additionCallback, [$$actor, $item, $data, $context]);
         } catch (\Exception $e) {
-            $item->rest_cnt++;
-            $item->save();
             throw $e;
         }
-
-        if ($context->noConsume)
-            $item->rest_cnt++;
+        if (!$context->noToConsume) {
+            $item->rest_cnt--;
+        }
 
         $this->events->dispatch(new UseDone($actor, $item));
 
@@ -174,16 +171,16 @@ class StoreHelper
                 $item->delete();
                 return $context->msg;
             } else {
-                if (!$context->noConsume) {
-                    $item->rest_cnt++;
-                }
-                $item->save();
                 $this->providerHelper->exceptionWith("xypp-store.forum.use_result.fail.fail_expire");
             }
         }
 
+
         if ($item->isDirty()) {
             $item->save();
+        }
+        if ($actor->isDirty()) {
+            $actor->save();
         }
         return $context->msg;
     }

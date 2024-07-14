@@ -14,8 +14,8 @@ export default class CreateItemModal extends Modal {
     onupdate(vnode: any): void;
     oncreate(vnode: any): void;
     content(): JSX.Element;
-    onsubmit(e: any): Promise<void>;
-    delete(): Promise<void>;
+    onsubmit(e: any): Promise<any>;
+    delete(e: any): Promise<any>;
     getProviderData(e: string): Promise<void>;
     changeProvider(e: string): void;
     changeProviderData(e: string): void;

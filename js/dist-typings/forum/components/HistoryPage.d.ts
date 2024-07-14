@@ -12,4 +12,6 @@ export default class HistoryPage extends UserPage {
     content(): JSX.Element;
     changeFilter(e: string): void;
     loadData(): Promise<void>;
+    itemHasDeleted(item: PurchaseHistory): void;
+    updateItem(item: PurchaseHistory): void;
 }

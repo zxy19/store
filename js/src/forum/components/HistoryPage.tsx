@@ -36,7 +36,11 @@ export default class HistoryPage extends UserPage {
                     {showIf(this.loading, <LoadingIndicator display="block" />,
                         showIf(!!(this.record?.length), this.record?.map((item, index) => {
                             return (
-                                <PurchaseHistoryComponent item={item} />
+                                <PurchaseHistoryComponent
+                                    item={item}
+                                    onSubmit={this.updateItem.bind(this)}
+                                    onDelete={this.itemHasDeleted.bind(this)}
+                                />
                             );
                         }), <Placeholder text={app.translator.trans("xypp-store.forum.history.no_record")} />)
                     )}
@@ -61,6 +65,22 @@ export default class HistoryPage extends UserPage {
         }
         this.record = await app.store.find("purchase-history", { id: this.user?.id(), type } as any) as any;
         this.loading = false;
+        m.redraw();
+    }
+    itemHasDeleted(item: PurchaseHistory) {
+        if (this.record)
+            this.record = this.record?.filter(i => i.id() != item.id());
+        m.redraw();
+    }
+    updateItem(item: PurchaseHistory) {
+        if (!this.record) {
+            this.record = [];
+        }
+        if (this.record.find(i => i.id() == item.id())) {
+            this.record = this.record.map(i => i.id() == item.id() ? item : i);
+        } else {
+            this.record.push(item);
+        }
         m.redraw();
     }
 }

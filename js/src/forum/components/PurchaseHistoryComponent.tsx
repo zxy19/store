@@ -110,6 +110,9 @@ export default class PurchaseHistoryComponent extends Component {
       } catch (ignore) { };
       this.loading = false;
       m.redraw();
+      if ((this.attrs as any).onDelete) {
+        return (this.attrs as any).onDelete((this.attrs as any).item);
+      }
       setRouteWithForcedRefresh(app.route('user.purchase_history', { username: (app.current.data as any).user.slug() }));
     }
   }

@@ -10,6 +10,7 @@ import Select from 'flarum/common/components/Select';
 import StoreItemUtils from '../utils/StoreItemUtils';
 import { showIf } from '../utils/NodeUtil';
 import Placeholder from 'flarum/common/components/Placeholder';
+import StoreItem from '../../common/models/StoreItem';
 export default class StorePage extends Page {
   loading: boolean = false;
   record: any[] = [];
@@ -48,7 +49,11 @@ export default class StorePage extends Page {
                 {showIf(this.loading, <LoadingIndicator />,
                   showIf(!!(this.record?.length),
                     this.record.map((item) => {
-                      return <StoreItemComponent item={item}></StoreItemComponent>;
+                      return <StoreItemComponent
+                        item={item}
+                        onSubmit={this.updateItem.bind(this)}
+                        onDelete={this.itemHasDeleted.bind(this)}
+                      ></StoreItemComponent>;
                     }),
                     <Placeholder text={app.translator.trans("xypp-store.forum.item.no_available")} />
                   ))}
@@ -74,6 +79,25 @@ export default class StorePage extends Page {
   }
 
   create() {
-    app.modal.show(CreateItemModal);
+    app.modal.show(CreateItemModal, {
+      onSubmit: (item: StoreItem) => {
+        this.record.push(item);
+        m.redraw();
+      }
+    });
+  }
+
+  updateItem(item: StoreItem) {
+    if (this.record.find(i => i.id() == item.id())) {
+      this.record = this.record.map(i => i.id() == item.id() ? item : i);
+    } else {
+      this.record.push(item);
+    }
+    m.redraw();
+  }
+  itemHasDeleted(item: StoreItem) {
+    if (this.record)
+      this.record = this.record?.filter(i => i.id() != item.id());
+    m.redraw();
   }
 }

@@ -17,7 +17,7 @@ class ExpireContext
      * Internal
      * @var User
      */
-    public User|null|false $actor;
+    public User|null|false $actor = false;
     /**
      * Internal
      */

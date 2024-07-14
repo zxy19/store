@@ -5,6 +5,6 @@ export default class PurchaseHistoryComponent extends Component {
     isConfirm: boolean;
     view(vnode: any): JSX.Element;
     use(): Promise<void>;
-    delete(): Promise<void>;
+    delete(): Promise<any>;
     resetConfirm(): void;
 }

@@ -40,7 +40,7 @@ class UseContext
     /**
      * Internal
      */
-    public $noConsume = false;
+    public $noToConsume = false;
     /**
      * Internal
      */
@@ -80,7 +80,7 @@ class UseContext
      */
     public function noConsume()
     {
-        $this->noConsume = true;
+        $this->noToConsume = true;
     }
     /**
      * Set to remove the item after use.

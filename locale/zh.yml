@@ -32,6 +32,7 @@ xypp-store:
       edit-button: 编辑
       button: 创建
       success: 成功
+      confirm_delete: "确定删除这件商品吗?"
       delete-button: 删除商品
       providers:
         unknown: "选择商品提供者"
@@ -46,6 +47,7 @@ xypp-store:
       expire: 有效期{0}
       no_available: "没有可用的商品"
       infinity_count: 可以无限购买
+      not_found: "未找到该商品"
     history:
       no_record: "无已购项目"
       delete_button: 删除已购项目
@@ -58,6 +60,7 @@ xypp-store:
       forever: 永久
       confirm_use: "确定使用吗?"
       unable_to_use: "该物品不可以使用"
+      not_found: "未找到该记录"
     use_result:
       success: "成功"
       fail:

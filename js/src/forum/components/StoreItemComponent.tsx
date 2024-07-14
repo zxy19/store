@@ -99,17 +99,33 @@ export default class StoreItemComponent extends Component {
         url: app.forum.attribute('apiUrl') + '/store-item/' + (this.attrs as any).item.id() + '/purchase',
       });
       app.alerts.show(Alert, { type: "success" }, app.translator.trans('xypp-store.forum.purchase_result.success'));
+      if ((this.attrs as any).onSubmit) {
+        app.store.find("store-item", (this.attrs as any).item.id()).then(
+          (item) => {
+            (this.attrs as any).onSubmit(item);
+            this.loading = false;
+            m.redraw();
+          }
+        )
+        return;
+      }
       setRouteWithForcedRefresh(app.route("storePage"));
     } catch (e) {
       console.log(e);
-    } finally {
       this.loading = false;
+    } finally {
+      if (!(this.attrs as any).onSubmit)
+        this.loading = false;
       this.isConfirm = false;
       m.redraw();
     }
   }
   edit() {
-    app.modal.show(CreateItemModal, { item_id: (this.attrs as any).item.id() });
+    app.modal.show(CreateItemModal, {
+      item_id: (this.attrs as any).item.id(),
+      onDelete: (this.attrs as any).onDelete,
+      onSubmit: (this.attrs as any).onSubmit
+    });
     m.redraw();
   }
   resetConfirm() {
