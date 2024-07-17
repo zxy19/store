@@ -66,7 +66,7 @@ export default class StoreItemComponent extends Component {
             {" | "}
             <span className='store-item-price'>
               <i class="fas fa-coins fas-space-right" />
-              {item.price()}
+              {(item.price() <= 0) ? app.translator.trans('xypp-store.forum.price_free') : item.price()}
             </span>
           </Button>
         </span>

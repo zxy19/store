@@ -5,12 +5,12 @@ import Model from 'flarum/common/Model';
 
 export default class StoreItem extends Model {
   itemData = Model.attribute('data');
-  name = Model.attribute('name');
-  desc = Model.attribute('desc');
-  price = Model.attribute('price');
-  provider = Model.attribute('provider');
-  provider_data = Model.attribute('provider_data');
-  unavailable = Model.attribute('unavailable');
+  name = Model.attribute<string>('name');
+  desc = Model.attribute<string>('desc');
+  price = Model.attribute<number>('price');
+  provider = Model.attribute<string>('provider');
+  provider_data = Model.attribute<string>('provider_data');
+  unavailable = Model.attribute<any>('unavailable');
   valid = Model.attribute('valid');
   rest_cnt = Model.attribute('rest_cnt');
   use_cnt = Model.attribute('use_cnt');

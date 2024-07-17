@@ -7,6 +7,7 @@ xypp-store:
     purchase: 购买
     edit_button: 编辑
     show_case: 橱窗
+    price_free: 免费
     provider:
       all: 所有
       error:
