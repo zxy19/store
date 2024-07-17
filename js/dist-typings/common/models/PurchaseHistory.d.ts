@@ -4,7 +4,7 @@ export default class PurchaseHistory extends Model {
     user_id: () => unknown;
     item_id: () => unknown;
     valid: () => unknown;
-    itemData: () => unknown;
+    itemData: () => any;
     store_item: () => false | Model;
     provider: () => unknown;
     can_use: () => unknown;

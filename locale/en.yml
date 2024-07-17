@@ -39,6 +39,7 @@ xypp-store:
         unknown: "Select Provider"
         unknown_data: "Need to select provider first"
         no_select_data: "Select Provider Data"
+        special_data: "Data Selected"
       provider_data_error: "Please select provider and data"
       provider_data_default: "Default data"
     purchase-confirm: "Confirm Purchase?"

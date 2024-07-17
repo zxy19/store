@@ -39,6 +39,7 @@ xypp-store:
         unknown: "选择商品提供者"
         unknown_data: "需要选择提供者"
         no_select_data: "选择提供者数据"
+        special_data: "数据已选择"
       provider_data_error: "请选择提供者和数据"
       provider_data_default: "默认数据"
     purchase-confirm: "确定购买吗?"

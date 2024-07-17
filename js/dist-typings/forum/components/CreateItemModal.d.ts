@@ -20,4 +20,5 @@ export default class CreateItemModal extends Modal {
     changeProvider(e: string): void;
     changeProviderData(e: string): void;
     changeSpecialData(e: string): void;
+    clearSpecialData(): void;
 }

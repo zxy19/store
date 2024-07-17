@@ -8,7 +8,7 @@ export default class PurchaseHistory extends Model {
   user_id = Model.attribute('user_id');
   item_id = Model.attribute('item_id');
   valid = Model.attribute('valid');
-  itemData = Model.attribute('itemData');
+  itemData = Model.attribute<any>('data');
   store_item = Model.hasOne('store_item');
   provider = Model.attribute('provider');
   can_use = Model.attribute('can_use');

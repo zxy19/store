@@ -85,7 +85,9 @@ export default class CreateItemModal extends Modal {
           <div className="Form-group">
             <label for="xypp-store-create-ipt-provider_data">{app.translator.trans('xypp-store.forum.create-modal.provider_data')}</label>
             <Select id="xypp-store-create-selector-provider_data" value={this.selectedData} options={this.providerDatas} onchange={this.changeProviderData.bind(this)}></Select>
-            <div id="xypp-store-create-selector-provider_special"></div>
+            <div id="xypp-store-create-selector-provider_special">
+              {this.selectedSpecialData}
+            </div>
           </div>
           <div className="Form-group store-control-spacing">
             <Button class="Button Button--primary" type="submit" loading={this.loading}>
@@ -93,7 +95,7 @@ export default class CreateItemModal extends Modal {
                 app.translator.trans('xypp-store.forum.create-modal.button')}
             </Button>
             {(this.attrs as any).item_id ? (
-              <Button  class="Button Button--danger" loading={this.loading} disabled={this.loading} onclick={this.delete.bind(this)}>
+              <Button class="Button Button--danger" loading={this.loading} disabled={this.loading} onclick={this.delete.bind(this)}>
                 <i class="fas fa-trash"></i>{app.translator.trans('xypp-store.forum.create-modal.delete-button')}
               </Button>) : ""
             }
@@ -155,7 +157,7 @@ export default class CreateItemModal extends Modal {
   }
   async delete(e: any) {
     e.preventDefault();
-    if(!confirm(app.translator.trans('xypp-store.forum.create-modal.confirm_delete') as string)){
+    if (!confirm(app.translator.trans('xypp-store.forum.create-modal.confirm_delete') as string)) {
       return;
     }
     this.loading = true;
@@ -196,13 +198,19 @@ export default class CreateItemModal extends Modal {
     this.$('#xypp-store-create-ipt-provider').val(e);
     this.loading = true;
     this.providerDatas = {};
+    this.$('#xypp-store-create-ipt-provider_data').val("unknown");
+    this.selectedData = "unknown";
+    this.selectedSpecialData = "";
     this.getProviderData(e);
   }
   changeProviderData(e: string) {
     if (this.specialDatas[e]) {
-      this.specialDatas[e]().then(this.changeSpecialData.bind(this));
+      this.specialDatas[e]().then(this.changeSpecialData.bind(this)).catch(this.clearSpecialData.bind(this));
     } else {
       this.selectedSpecialData = "";
+      if (this.providerDatas['___special']) {
+        delete this.providerDatas['___special'];
+      }
     }
     this.selectedData = e;
     if (e == "unknown" || e.startsWith("to_select_")) {
@@ -213,7 +221,18 @@ export default class CreateItemModal extends Modal {
   }
   changeSpecialData(e: string) {
     this.$("#xypp-store-create-selector-provider_special").text(e);
+    this.providerDatas["___special"] = app.translator.trans("xypp-store.forum.create-modal.providers.special_data");
+    this.selectedData = "___special";
     this.selectedSpecialData = e;
+    m.redraw();
+  }
+  clearSpecialData() {
+    this.$("#xypp-store-create-selector-provider_special").text("");
+    this.selectedData = "unknown";
+    if (this.providerDatas['___special']) {
+      delete this.providerDatas['___special'];
+    }
+    this.selectedSpecialData = "unknown";
     m.redraw();
   }
 }
