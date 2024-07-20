@@ -27,6 +27,7 @@ use Xypp\Store\Api\Serializer\PurchaseHistorySerializer;
 use Xypp\Store\Api\Serializer\StoreItemSerializer;
 use Xypp\Store\Event\ExpireInstantly;
 use Xypp\Store\Listener\ExpireInstantlyListener;
+use Xypp\Store\Provider\StoreProvider;
 
 return [
     (new Extend\Frontend('forum'))
@@ -61,4 +62,6 @@ return [
             $event->everyMinute()->withoutOverlapping();
         }),
     new Extend\Locales(__DIR__ . '/locale'),
+    (new Extend\ServiceProvider)
+        ->register(StoreProvider::class)
 ];

@@ -3,7 +3,9 @@ namespace Xypp\Store\Extend;
 
 use Flarum\Extend\ExtenderInterface;
 use Flarum\Foundation\ContainerUtil;
+use Illuminate\Container\Container;
 use Xypp\Store\Helper\ProviderHelper;
+use Xypp\Store\Helper\StoreProviderCollection;
 use Xypp\Store\WarpStoreProvider;
 
 class StoreItemProvider implements ExtenderInterface
@@ -13,14 +15,18 @@ class StoreItemProvider implements ExtenderInterface
     private array $extendSimpleProviders = [];
     public function extend($container, $extension = null)
     {
-        foreach ($this->extendSimpleProviders as $provider) {
-            $provider->extend($container);
-            ProviderHelper::addProvider($provider);
-        }
-
-        foreach ($this->extendStoreProviders as $provider) {
-            ProviderHelper::addProvider($container->make($provider));
-        }
+        $container->resolving(
+            StoreProviderCollection::class,
+            function (StoreProviderCollection $collection, Container $container) {
+                foreach ($this->extendSimpleProviders as $provider) {
+                    $provider->extend($container);
+                    $collection->addProvider($provider);
+                }
+                foreach ($this->extendStoreProviders as $provider) {
+                    $collection->addProvider($container->make($provider));
+                }
+            }
+        );
     }
     public function provide($provider)
     {

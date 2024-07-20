@@ -18,23 +18,13 @@ use Xypp\Store\StoreItem;
  */
 class ProviderHelper
 {
-    /**
-     * Registered providers
-     */
-    private static array $extendProvider = [];
-    /**
-     * Register a provider.
-     * @param AbstractStoreProvider $provider
-     */
-    public static function addProvider(AbstractStoreProvider $provider): void
-    {
-        self::$extendProvider[$provider->name] = $provider;
-    }
 
-    protected $translator;
-    public function __construct(Translator $translator)
+    protected Translator $translator;
+    protected StoreProviderCollection $collection;
+    public function __construct(StoreProviderCollection $collection, Translator $translator)
     {
         $this->translator = $translator;
+        $this->collection = $collection;
     }
 
     /**
@@ -45,10 +35,11 @@ class ProviderHelper
      */
     public function getProvider(string $name): AbstractStoreProvider
     {
-        if (!isset(self::$extendProvider[$name])) {
+        $result = $this->collection->getProvider($name);
+        if ($result === false) {
             throw new ValidationException(["provider" => $this->translator->trans("xypp-store.forum.provider.error.title")]);
         }
-        return self::$extendProvider[$name];
+        return $result;
     }
     /**
      * Check if provider exists
@@ -59,7 +50,8 @@ class ProviderHelper
     {
         if (!$name)
             return false;
-        return isset(self::$extendProvider[$name]);
+        $providers = $this->collection->getProviderList();
+        return isset($providers[$name]);
     }
 
     //====SERIALIZERS====
@@ -225,8 +217,10 @@ class ProviderHelper
      */
     public function providersShowInHistory(): array
     {
+        
+        $providers = $this->collection->getProviderList();
         $ret = [];
-        foreach (self::$extendProvider as $key => $provider) {
+        foreach ($providers as $key => $provider) {
             if ($provider->canSeeInHistory) {
                 $ret[] = $key;
             }
