@@ -8,7 +8,7 @@ use Flarum\Foundation\EventGeneratorTrait;
 
 class PurchaseHistory extends AbstractModel
 {
-    protected $dates = ['expire_at'];
+    protected $dates = ['expire_at',"created_at", "updated_at"];
     protected $table = 'purchase_history';
     public $valid = true;
     public $dataAttrs = [];

@@ -109,7 +109,7 @@ class StoreHelper
             $item->rest_cnt--;
         if (!$context->noCostMoney)
             $actor->money -= $item->price;
-
+        $newModel->updateTimestamps();
 
         $this->events->dispatch(new PurchaseDone($actor, $item, $newModel));
         if ($actor->money != $originalMoney)

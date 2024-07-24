@@ -56,6 +56,7 @@ class AddStoreItemController extends AbstractCreateController
         if ($model->use_cnt === "") {
             $model->use_cnt = null;
         }
+        $model->updateTimestamps();
         $this->helper->getAttrData($model);
         $model->save();
         return $model;
