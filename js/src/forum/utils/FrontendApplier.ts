@@ -18,7 +18,9 @@ export function addFrontendProviders(
     name: string,
     getProviderData?: (providerDatas: Record<string, string>, specialProviderKeyCallback: Record<string, () => Promise<string>>) => Promise<void>,
     getShowCase?: (item: StoreItem, purchase_history?: PurchaseHistory) => ComponentTypes,
-    getUseData?: (item: PurchaseHistory) => Promise<string>
+    getUseData?: (item: PurchaseHistory) => Promise<string>,
+    afterPurchase?: (item: PurchaseHistory) => Promise<void>,
+    getUseButtonName?: (item: PurchaseHistory, confirm: boolean, alwaysShow: boolean) => { text: string, disable: boolean }
 ): void {
     if (getProviderData) {
         override(CreateItemModal.prototype, "getProviderData", async function (_originFunc: any, comingProvider) {
@@ -62,6 +64,22 @@ export function addFrontendProviders(
                 return getUseData(item);
             }
             return _originFunc(item);
+        })
+    }
+    if (afterPurchase) {
+        override(StoreItemUtils.prototype, "afterPurchase", function (_originFunc: any, item: PurchaseHistory) {
+            if (item.provider() == provider) {
+                return afterPurchase(item);
+            }
+            return _originFunc(item);
+        })
+    }
+    if (getUseButtonName) {
+        override(StoreItemUtils.prototype, "getUseButtonName", function (_originFunc: any, item: PurchaseHistory, confirm: boolean, alwaysShow: boolean) {
+            if (item.provider() == provider) {
+                return getUseButtonName(item, confirm, alwaysShow);
+            }
+            return _originFunc(item, confirm, alwaysShow);
         })
     }
     console.log(`Provider:${provider}#${name} registered`);

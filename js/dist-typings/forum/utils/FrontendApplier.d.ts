@@ -9,4 +9,7 @@ import type { ComponentTypes } from 'mithril';
  * @param getShowCase Function to create showcase for item box. Return Mithril.VNode/string
  * @param getUseData Function to get data that is filled to use form. Should return SERIALIZED data as string.
  */
-export declare function addFrontendProviders(provider: string, name: string, getProviderData?: (providerDatas: Record<string, string>, specialProviderKeyCallback: Record<string, () => Promise<string>>) => Promise<void>, getShowCase?: (item: StoreItem, purchase_history?: PurchaseHistory) => ComponentTypes, getUseData?: (item: PurchaseHistory) => Promise<string>): void;
+export declare function addFrontendProviders(provider: string, name: string, getProviderData?: (providerDatas: Record<string, string>, specialProviderKeyCallback: Record<string, () => Promise<string>>) => Promise<void>, getShowCase?: (item: StoreItem, purchase_history?: PurchaseHistory) => ComponentTypes, getUseData?: (item: PurchaseHistory) => Promise<string>, afterPurchase?: (item: PurchaseHistory) => Promise<void>, getUseButtonName?: (item: PurchaseHistory, confirm: boolean, alwaysShow: boolean) => {
+    text: string;
+    disable: boolean;
+}): void;

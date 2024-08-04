@@ -18,20 +18,13 @@ export default class PurchaseHistoryComponent extends Component {
   view(vnode: any) {
     const item: PurchaseHistory = (this.attrs as any).item;
     const storeItem = item.store_item() as StoreItem;
-
+    const btnConfig = StoreItemUtils.getInstance().getUseButtonName(item, this.isConfirm, !(this.attrs as any).alwaysShowBtn);
     let button = "primary";
-    let tipKey: string = 'xypp-store.forum.history.use';
-    if (item.unavailable()) {
-      tipKey = (item.unavailable() as string) || "";
-      if (tipKey.split(".").length <= 2)
-        tipKey = 'xypp-store.forum.unavailable.' + tipKey;
+    let tipKey: string = btnConfig.text;
+    if (btnConfig.disable) {
       button = "disabled";
-    } else if (!item.can_use() && !(this.attrs as any).alwaysShowBtn) {
-      tipKey = "xypp-store.forum.history.unable_to_use";
-      button = "disabled";
-    } else if (this.isConfirm) {
-      tipKey = 'xypp-store.forum.history.confirm_use';
     }
+
 
     return (
       <div className={"store-item" + (item.valid() ? "" : " invalid")}>

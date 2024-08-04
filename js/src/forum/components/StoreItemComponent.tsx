@@ -8,6 +8,7 @@ import CreateItemModal from '../components/CreateItemModal';
 import { showIf } from "../utils/NodeUtil"
 import { effectLengthFormat } from '../utils/TimeUtils';
 import Alert from 'flarum/common/components/Alert';
+import PurchaseHistory from '../../common/models/PurchaseHistory';
 
 export default class StoreItemComponent extends Component {
   loading: boolean = false;
@@ -94,11 +95,13 @@ export default class StoreItemComponent extends Component {
     this.loading = true;
     m.redraw();
     try {
-      await app.request({
+      const purchaseHistoryPayload = await app.request({
         method: 'GET',
         url: app.forum.attribute('apiUrl') + '/store-item/' + (this.attrs as any).item.id() + '/purchase',
       });
+      const purchaseHistory = app.store.pushPayload<PurchaseHistory>(purchaseHistoryPayload as any);
       app.alerts.show(Alert, { type: "success" }, app.translator.trans('xypp-store.forum.purchase_result.success'));
+      await StoreItemUtils.getInstance().afterPurchase(purchaseHistory);
       if ((this.attrs as any).onSubmit) {
         app.store.find("store-item", (this.attrs as any).item.id()).then(
           (item) => {
