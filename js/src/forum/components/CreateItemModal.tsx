@@ -117,7 +117,7 @@ export default class CreateItemModal extends Modal {
       }
     }
     let providerData = this.selectedData;
-    if (this.specialDatas[this.selectedData]) {
+    if (this.selectedData === "___special") {
       if (this.selectedSpecialData) {
         providerData = this.selectedSpecialData;
       } else {
